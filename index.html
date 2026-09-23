@@ -15,18 +15,18 @@
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #8b5cf6; border-radius: 4px; }
         
-        /* Элитный Cyber Luxe Glass */
+        /* Ультра-глубокое матовое стекло */
         .glass-panel {
-            background: rgba(13, 13, 20, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(12, 12, 18, 0.8);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .glass-panel:hover {
-            border-color: rgba(139, 92, 246, 0.35);
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.18);
         }
 
         .tab-container {
@@ -65,22 +65,27 @@
             pointer-events: none;
         }
 
+        /* Глубокий многослойный фон */
         body {
-            background: radial-gradient(circle at 50% -20%, #2e1065 0%, #09090b 55%, #000000 100%);
+            background-color: #030305;
+            background-image: 
+                radial-gradient(circle at 50% -10%, rgba(91, 33, 182, 0.35) 0%, rgba(15, 15, 23, 0.7) 45%, #000000 100%),
+                radial-gradient(circle at 10% 90%, rgba(76, 29, 149, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 40%);
             overflow-x: hidden;
         }
     </style>
 </head>
 <body class="text-zinc-100 font-sans min-h-screen p-4 pb-28 selection:bg-violet-600 selection:text-white">
 
-    <!-- СТАРТОВЫЙ ЭКРАН С ЗАПОЛНЯЮЩИМСЯ КРУЖКОМ -->
+    <!-- СТАРТОВЫЙ ЭКРАН С УВЕЛИЧЕННЫМ КРУЖКОМ -->
     <div id="lock-screen" class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center p-6 text-center select-none cursor-pointer">
-        <div id="core-btn" class="relative w-32 h-32 flex items-center justify-center mb-6 rounded-full bg-violet-950/30 border border-violet-500/40 shadow-[0_0_40px_rgba(139,92,246,0.3)] overflow-hidden transition-transform duration-300">
-            <!-- Фиолетовая заливка при зажатии -->
+        <div id="core-btn" class="relative w-40 h-40 flex items-center justify-center mb-8 rounded-full bg-violet-950/30 border border-violet-500/40 shadow-[0_0_60px_rgba(139,92,246,0.35)] overflow-hidden transition-transform duration-300">
+            <!-- Заполнение при зажатии -->
             <div id="core-fill" class="absolute inset-0 rounded-full bg-gradient-to-tr from-violet-700 to-indigo-600 scale-0 origin-center transition-transform duration-75"></div>
-            <span class="relative z-10 text-3xl filter drop-shadow-[0_0_10px_rgba(139,92,246,0.8)]">⚡</span>
+            <span class="relative z-10 text-4xl filter drop-shadow-[0_0_15px_rgba(139,92,246,0.9)]">⚡</span>
         </div>
-        <h1 class="text-3xl font-black tracking-widest uppercase text-white drop-shadow-[0_0_20px_rgba(139,92,246,0.8)] mb-2">
+        <h1 class="text-3xl font-black tracking-widest uppercase text-white drop-shadow-[0_0_25px_rgba(139,92,246,0.8)] mb-2">
             BACK <span class="text-violet-500">PRIME</span>
         </h1>
         <p class="text-xs text-zinc-400 uppercase tracking-[0.25em] font-bold">
@@ -95,8 +100,13 @@
                 <h1 class="text-2xl font-black tracking-widest uppercase text-white drop-shadow-md">BACK <span class="text-violet-400">PRIME</span></h1>
                 <p id="header-real-date" class="text-[10px] text-violet-400 uppercase tracking-widest font-bold mt-0.5">Загрузка...</p>
             </div>
-            <div class="glass-panel text-emerald-400 px-3 py-1.5 rounded-full text-[11px] font-black tracking-widest uppercase shadow-lg">
-                LUXE v14.1
+            <div class="flex items-center gap-1.5">
+                <div class="glass-panel text-violet-300 px-2.5 py-1.5 rounded-full text-[10px] font-extrabold uppercase shadow-lg flex items-center gap-1">
+                    🔥 <span id="streak-count">1</span> день
+                </div>
+                <div class="glass-panel text-emerald-400 px-3 py-1.5 rounded-full text-[11px] font-black tracking-widest uppercase shadow-lg">
+                    v15.0
+                </div>
             </div>
         </header>
 
@@ -229,13 +239,20 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        // Расчет стрик-дня (серии)
+        function updateStreak() {
+            let history = JSON.parse(localStorage.getItem('bp_history') || '[]');
+            document.getElementById('streak-count').innerText = Math.max(1, history.length);
+        }
+        updateStreak();
+
         // --- ЛОГИКА ЗАПОЛНЯЮЩЕГОСЯ КРУЖКА ПРИ ЗАЖАТИИ ---
         const lockScreen = document.getElementById('lock-screen');
         const coreBtn = document.getElementById('core-btn');
         const coreFill = document.getElementById('core-fill');
         let holdStartTime = 0;
         let holdTimerInterval = null;
-        const requiredHoldTime = 800; // 0.8 секунды зажатия
+        const requiredHoldTime = 800;
 
         function startUnlock(e) {
             e.preventDefault();
@@ -246,7 +263,6 @@
                 let elapsed = Date.now() - holdStartTime;
                 let progress = Math.min(elapsed / requiredHoldTime, 1);
                 
-                // Плавное заполнение кружка фиолетовым цветом
                 coreFill.style.transform = `scale(${progress})`;
 
                 if (progress >= 1) {
@@ -421,6 +437,7 @@
             let history = JSON.parse(localStorage.getItem('bp_history') || '[]');
             history.push({ id: Date.now(), type: 'workout', name: wName, date: minskNow.toISOString().split('T')[0] });
             localStorage.setItem('bp_history', JSON.stringify(history));
+            updateStreak();
             if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
             alert('🔥 Тренировка успешно зафиксирована в статистике!');
         }
@@ -598,6 +615,7 @@
             let history = JSON.parse(localStorage.getItem('bp_history') || '[]');
             history = history.filter(h => h.id !== id);
             localStorage.setItem('bp_history', JSON.stringify(history));
+            updateStreak();
             renderHistoryManager();
             renderCharts();
             if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
