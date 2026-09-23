@@ -13,22 +13,23 @@
     <style>
         * { transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease; }
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #8b5cf6; border-radius: 4px; }
         
+        /* Дорогое матовое стекло (Cyber Luxe Glass) */
         .glass-panel {
-            background: rgba(20, 20, 26, 0.9);
+            background: rgba(15, 15, 23, 0.75);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 16px 40px 0 rgba(0, 0, 0, 0.65), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
         }
 
         .glass-panel-active {
-            background: rgba(30, 16, 18, 0.92);
+            background: rgba(22, 18, 38, 0.85);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(220, 38, 38, 0.65);
-            box-shadow: 0 0 35px rgba(220, 38, 38, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            box-shadow: 0 0 35px rgba(139, 92, 246, 0.25), inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
         }
 
         .tab-content {
@@ -55,19 +56,19 @@
         }
 
         body {
-            background: radial-gradient(circle at 50% 0%, #2a070c 0%, #0b0b0f 55%, #000000 100%);
+            background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #09090b 60%, #000000 100%);
             overflow-x: hidden;
         }
     </style>
 </head>
-<body class="text-zinc-100 font-sans min-h-screen p-4 pb-28 selection:bg-red-600 selection:text-white">
+<body class="text-zinc-100 font-sans min-h-screen p-4 pb-28 selection:bg-violet-600 selection:text-white">
 
     <!-- СПЛЭШ-ЭКРАН -->
     <div id="splash-screen" class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center p-6 text-center">
         <div class="relative">
-            <div class="absolute -inset-4 bg-red-600/30 rounded-full blur-xl animate-pulse"></div>
-            <h1 class="relative text-4xl font-black tracking-widest uppercase text-white drop-shadow-[0_0_20px_rgba(220,38,38,0.8)]">
-                BACK <span class="text-red-600">PRIME</span>
+            <div class="absolute -inset-4 bg-violet-600/30 rounded-full blur-2xl animate-pulse"></div>
+            <h1 class="relative text-4xl font-black tracking-widest uppercase text-white drop-shadow-[0_0_20px_rgba(139,92,246,0.8)]">
+                BACK <span class="text-violet-500">PRIME</span>
             </h1>
         </div>
         <p class="text-xs text-zinc-400 uppercase tracking-[0.3em] mt-3 font-bold animate-pulse">Загрузка системы...</p>
@@ -77,10 +78,10 @@
         <!-- Шапка -->
         <header class="flex justify-between items-center mb-3 mt-2">
             <div>
-                <h1 class="text-2xl font-black tracking-widest uppercase text-white drop-shadow-md">BACK <span class="text-red-500">PRIME</span></h1>
-                <p class="text-[10px] text-zinc-400 uppercase tracking-widest font-bold">Elite System v8.0</p>
+                <h1 class="text-2xl font-black tracking-widest uppercase text-white drop-shadow-md">BACK <span class="text-violet-400">PRIME</span></h1>
+                <p class="text-[10px] text-zinc-400 uppercase tracking-widest font-bold">Cyber Luxe v9.0</p>
             </div>
-            <div id="system-status" class="glass-panel text-red-500 px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase shadow-lg">
+            <div id="system-status" class="glass-panel text-violet-400 px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase shadow-lg">
                 ONLINE
             </div>
         </header>
@@ -94,7 +95,7 @@
 
         <!-- Навигация -->
         <div class="grid grid-cols-3 gap-1.5 glass-panel p-1.5 rounded-2xl mb-6 relative z-10">
-            <button onclick="switchTab('workouts')" id="tab-workouts" class="py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-lg shadow-red-600/30 uppercase tracking-wider">План</button>
+            <button onclick="switchTab('workouts')" id="tab-workouts" class="py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-600/30 uppercase tracking-wider">План</button>
             <button onclick="switchTab('tasks')" id="tab-tasks" class="py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider">Задачи</button>
             <button onclick="switchTab('stats')" id="tab-stats" class="py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider">Статы</button>
         </div>
@@ -109,7 +110,7 @@
                 <div id="workouts-list-view" class="space-y-3">
                     <div class="flex justify-between items-center mb-1">
                         <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Твои программы</h2>
-                        <button onclick="openAddWorkoutModal()" class="text-xs text-red-500 hover:text-red-400 font-bold uppercase tracking-wider">＋ Создать</button>
+                        <button onclick="openAddWorkoutModal()" class="text-xs text-violet-400 hover:text-violet-300 font-bold uppercase tracking-wider">＋ Создать</button>
                     </div>
                     <div id="workouts-container" class="space-y-2.5">
                         <!-- Рендерится динамически -->
@@ -124,27 +125,27 @@
 
                     <div class="glass-panel rounded-2xl p-5 shadow-xl space-y-4">
                         <div>
-                            <span id="detail-tag" class="text-[10px] font-black text-red-400 uppercase tracking-widest">Программа</span>
+                            <span id="detail-tag" class="text-[10px] font-black text-violet-400 uppercase tracking-widest">Программа</span>
                             <h2 id="detail-title" class="text-xl font-extrabold text-white mt-0.5">Название</h2>
                         </div>
 
-                        <div id="exercises-checklist" class="space-y-2.5 pt-2 border-t border-zinc-800">
+                        <div id="exercises-checklist" class="space-y-2.5 pt-2 border-t border-white/10">
                             <!-- Упражнения с чекбоксами -->
                         </div>
 
-                        <button onclick="finishActiveWorkout()" class="w-full bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 active:scale-95 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-red-600/40 uppercase tracking-wider text-xs">
+                        <button onclick="finishActiveWorkout()" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-95 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-emerald-600/30 uppercase tracking-wider text-xs">
                             ✅ Завершить тренировку
                         </button>
                     </div>
                 </div>
 
                 <!-- Модалка создания тренировки -->
-                <div id="add-workout-modal" class="hidden glass-panel rounded-2xl p-5 shadow-2xl space-y-3 border-red-500/40">
+                <div id="add-workout-modal" class="hidden glass-panel rounded-2xl p-5 shadow-2xl space-y-3 border-violet-500/40">
                     <h3 class="text-sm font-bold text-white uppercase tracking-wider">Новая тренировка</h3>
-                    <input type="text" id="newWorkoutName" placeholder="Название (например: День 3 • Руки)..." class="w-full bg-black/50 border border-zinc-700/60 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-red-500 transition">
-                    <textarea id="newWorkoutExercises" placeholder="Упражнения (каждое с новой строки):&#10;Бицепс с гантелями 3х10&#10;Французский жим 3х12" rows="4" class="w-full bg-black/50 border border-zinc-700/60 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-red-500 transition"></textarea>
+                    <input type="text" id="newWorkoutName" placeholder="Название (например: День 3 • Руки)..." class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500 transition">
+                    <textarea id="newWorkoutExercises" placeholder="Упражнения (каждое с новой строки):&#10;Бицепс с гантелями 3х10&#10;Французский жим 3х12" rows="4" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500 transition"></textarea>
                     <div class="flex gap-2 pt-1">
-                        <button onclick="saveNewWorkout()" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider transition">Сохранить</button>
+                        <button onclick="saveNewWorkout()" class="flex-1 bg-violet-600 hover:bg-violet-500 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider transition">Сохранить</button>
                         <button onclick="closeAddWorkoutModal()" class="px-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider transition">Отмена</button>
                     </div>
                 </div>
@@ -156,8 +157,8 @@
                 <div class="glass-panel rounded-2xl p-4 shadow-xl">
                     <h2 class="text-xs font-bold text-zinc-300 mb-3 uppercase tracking-wider">Новая задача</h2>
                     <div class="flex gap-2">
-                        <input type="text" id="taskInput" placeholder="Написать код, почитать книгу..." class="flex-1 bg-black/50 border border-zinc-700/60 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-red-500 transition">
-                        <button onclick="addTask()" class="bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 active:scale-95 text-white px-5 rounded-xl font-bold text-sm transition shadow-lg shadow-red-600/30">＋</button>
+                        <input type="text" id="taskInput" placeholder="Написать код, почитать книгу..." class="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500 transition">
+                        <button onclick="addTask()" class="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 active:scale-95 text-white px-5 rounded-xl font-bold text-sm transition shadow-lg shadow-violet-600/30">＋</button>
                     </div>
                 </div>
 
@@ -166,7 +167,7 @@
                 </div>
             </div>
 
-            <!-- ВКЛАДКА 3: СТАТИСТИКА И ДИАГРАММЫ -->
+            <!-- ВКЛАДКА 3: СТАТИСТИКА И ДИАГРАММЫ + УПРАВЛЕНИЕ ИСТОРИЕЙ -->
             <div id="content-stats" class="tab-content space-y-4">
                 <div class="glass-panel rounded-2xl p-5 shadow-xl">
                     <h2 class="text-xs font-bold text-zinc-300 mb-4 uppercase tracking-wider text-center">Активность по дням</h2>
@@ -179,6 +180,17 @@
                     <h2 class="text-xs font-bold text-zinc-300 mb-4 uppercase tracking-wider text-center">Общий баланс задач и тренировок</h2>
                     <div class="relative w-full h-48 flex justify-center items-center">
                         <canvas id="overallChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- УПРАВЛЕНИЕ ИСТОРИЕЙ (ИСПРАВЛЕНИЕ СЛУЧАЙНЫХ НАЖАТИЙ) -->
+                <div class="glass-panel rounded-2xl p-4 shadow-xl space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xs font-bold text-zinc-300 uppercase tracking-wider">История тренировок (Правка)</h2>
+                        <span class="text-[10px] text-zinc-500">Удалить случайное</span>
+                    </div>
+                    <div id="history-manage-list" class="space-y-2 max-h-40 overflow-y-auto">
+                        <!-- Динамический лог тренировок с кнопкой удаления -->
                     </div>
                 </div>
             </div>
@@ -315,7 +327,7 @@
                 const btn = document.getElementById(`tab-${t}`);
                 const content = document.getElementById(`content-${t}`);
                 if (t === tab) {
-                    btn.className = "py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-lg shadow-red-600/30 uppercase tracking-wider";
+                    btn.className = "py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-600/30 uppercase tracking-wider";
                     content.classList.add('active');
                 } else {
                     btn.className = "py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider";
@@ -324,6 +336,7 @@
             });
             if (tab === 'stats') {
                 renderCharts();
+                renderHistoryManager();
             }
         }
 
@@ -386,12 +399,12 @@
             const workouts = getWorkouts();
 
             container.innerHTML = workouts.map(w => `
-                <div class="glass-panel rounded-2xl p-4 flex justify-between items-center cursor-pointer hover:border-red-500/50 transition" onclick="openWorkoutDetail('${w.id}')">
+                <div class="glass-panel rounded-2xl p-4 flex justify-between items-center cursor-pointer hover:border-violet-500/50 transition" onclick="openWorkoutDetail('${w.id}')">
                     <div>
-                        <span class="text-[10px] font-black text-red-400 uppercase tracking-widest">${w.tag || 'Своя программа'}</span>
+                        <span class="text-[10px] font-black text-violet-400 uppercase tracking-widest">${w.tag || 'Своя программа'}</span>
                         <h3 class="text-base font-extrabold text-white mt-0.5">${w.title}</h3>
                     </div>
-                    ${!w.isDefault ? `<button onclick="event.stopPropagation(); deleteWorkout('${w.id}')" class="text-zinc-600 hover:text-red-500 p-2 text-xs">✕</button>` : '<span class="text-zinc-600 text-xs">➔</span>'}
+                    ${!w.isDefault ? `<button onclick="event.stopPropagation(); deleteWorkout('${w.id}')" class="text-zinc-600 hover:text-red-400 p-2 text-xs">✕</button>` : '<span class="text-zinc-600 text-xs">➔</span>'}
                 </div>
             `).join('');
         }
@@ -405,11 +418,10 @@
             document.getElementById('detail-title').innerText = w.title;
             document.getElementById('detail-tag').innerText = w.tag || 'Пользовательская';
             
-            // Рендер упражнений как интерактивный чеклист
             const exList = document.getElementById('exercises-checklist');
             exList.innerHTML = w.exercises.map((ex, idx) => `
-                <div onclick="toggleExerciseCheck(${idx})" id="ex-row-${idx}" class="bg-black/40 border border-zinc-800 rounded-xl p-3.5 flex items-center gap-3 cursor-pointer transition select-none">
-                    <div id="ex-box-${idx}" class="w-5 h-5 rounded-lg border border-zinc-700 flex items-center justify-center text-xs text-white transition"></div>
+                <div onclick="toggleExerciseCheck(${idx})" id="ex-row-${idx}" class="bg-black/40 border border-white/10 rounded-xl p-3.5 flex items-center gap-3 cursor-pointer transition select-none">
+                    <div id="ex-box-${idx}" class="w-5 h-5 rounded-lg border border-white/20 flex items-center justify-center text-xs text-white transition"></div>
                     <span id="ex-text-${idx}" class="text-sm font-medium text-zinc-200 transition">${ex}</span>
                 </div>
             `).join('');
@@ -423,7 +435,6 @@
             document.getElementById('workouts-list-view').classList.remove('hidden');
         }
 
-        // Чекбокс упражнения
         let checkedExercises = {};
         function toggleExerciseCheck(idx) {
             checkedExercises[idx] = !checkedExercises[idx];
@@ -432,13 +443,13 @@
             const text = document.getElementById(`ex-text-${idx}`);
 
             if (checkedExercises[idx]) {
-                row.className = "bg-zinc-900/80 border border-green-600/50 rounded-xl p-3.5 flex items-center gap-3 cursor-pointer transition select-none";
-                box.className = "w-5 h-5 rounded-lg bg-green-600 border border-green-600 flex items-center justify-center text-xs text-white font-bold";
+                row.className = "bg-emerald-950/30 border border-emerald-500/40 rounded-xl p-3.5 flex items-center gap-3 cursor-pointer transition select-none";
+                box.className = "w-5 h-5 rounded-lg bg-emerald-600 border border-emerald-600 flex items-center justify-center text-xs text-white font-bold";
                 box.innerText = "✓";
                 text.className = "text-sm font-medium line-through text-zinc-500 transition";
             } else {
-                row.className = "bg-black/40 border border-zinc-800 rounded-xl p-3.5 flex items-center gap-3 cursor-pointer transition select-none";
-                box.className = "w-5 h-5 rounded-lg border border-zinc-700 flex items-center justify-center text-xs text-white transition";
+                row.className = "bg-black/40 border border-white/10 rounded-xl p-3.5 flex items-center gap-3 cursor-pointer transition select-none";
+                box.className = "w-5 h-5 rounded-lg border border-white/20 flex items-center justify-center text-xs text-white transition";
                 box.innerText = "";
                 text.className = "text-sm font-medium text-zinc-200 transition";
             }
@@ -478,12 +489,11 @@
             renderWorkoutsList();
         }
 
-        // Завершение тренировки
         function finishActiveWorkout() {
             if (!currentViewingWorkout) return;
 
             let history = JSON.parse(localStorage.getItem('bp_history') || '[]');
-            history.push({ type: 'workout', name: currentViewingWorkout.title, date: new Date().toISOString().split('T')[0] });
+            history.push({ id: Date.now(), type: 'workout', name: currentViewingWorkout.title, date: new Date().toISOString().split('T')[0] });
             localStorage.setItem('bp_history', JSON.stringify(history));
 
             checkedExercises = {};
@@ -491,6 +501,36 @@
 
             if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
             switchTab('stats');
+        }
+
+        // --- УПРАВЛЕНИЕ ИСТОРИЕЙ (ПРАВКА СТАТИСТИКИ) ---
+        function renderHistoryManager() {
+            const listEl = document.getElementById('history-manage-list');
+            let history = JSON.parse(localStorage.getItem('bp_history') || '[]');
+
+            if (history.length === 0) {
+                listEl.innerHTML = `<p class="text-xs text-zinc-500 text-center py-2">Нет записанных тренировок</p>`;
+                return;
+            }
+
+            listEl.innerHTML = history.slice(-5).reverse().map(item => `
+                <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex justify-between items-center text-xs">
+                    <div>
+                        <p class="font-bold text-zinc-200">${item.name}</p>
+                        <p class="text-[10px] text-zinc-500">${item.date}</p>
+                    </div>
+                    <button onclick="deleteHistoryItem(${item.id})" class="text-zinc-500 hover:text-red-400 p-1.5 font-bold">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function deleteHistoryItem(id) {
+            let history = JSON.parse(localStorage.getItem('bp_history') || '[]');
+            history = history.filter(h => h.id !== id);
+            localStorage.setItem('bp_history', JSON.stringify(history));
+            renderHistoryManager();
+            renderCharts();
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
         }
 
         // --- ЗАДАЧИ ---
@@ -535,7 +575,7 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button onclick="toggleTaskStatus(${t.id})" class="w-9 h-9 rounded-xl ${t.completed ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30' : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'} flex items-center justify-center font-bold transition active:scale-95">✓</button>
-                        <button onclick="deleteTask(${t.id})" class="w-9 h-9 rounded-xl bg-zinc-800 text-zinc-400 hover:bg-red-600 hover:text-white flex items-center justify-center font-bold transition active:scale-95">✕</button>
+                        <button onclick="deleteTask(${t.id})" class="w-9 h-9 rounded-xl bg-zinc-800 text-zinc-400 hover:bg-red-500 hover:text-white flex items-center justify-center font-bold transition active:scale-95">✕</button>
                     </div>
                 </div>
             `).join('');
@@ -559,7 +599,7 @@
                     labels: ['Выполнено', 'В ожидании', 'Тренировки'],
                     datasets: [{
                         data: [completedTasksCount, pendingTasksCount, workoutsCount],
-                        backgroundColor: ['#16a34a', '#3f3f46', '#dc2626'],
+                        backgroundColor: ['#10b981', '#3f3f46', '#8b5cf6'],
                         borderColor: 'transparent',
                         borderWidth: 0
                     }]
@@ -595,8 +635,8 @@
                 data: {
                     labels: days,
                     datasets: [
-                        { label: 'Выполнено', data: completedData, backgroundColor: '#16a34a', borderRadius: 6 },
-                        { label: 'Не выполнено', data: pendingData, backgroundColor: '#dc2626', borderRadius: 6 }
+                        { label: 'Выполнено', data: completedData, backgroundColor: '#10b981', borderRadius: 6 },
+                        { label: 'Не выполнено', data: pendingData, backgroundColor: '#8b5cf6', borderRadius: 6 }
                     ]
                 },
                 options: {
