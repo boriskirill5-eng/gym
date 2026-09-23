@@ -3,152 +3,271 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gym Plan Mini App</title>
-    <!-- Подключаем Tailwind CSS для красивого стильного дизайна -->
+    <title>Elite Hub Mini App</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Подключаем Telegram Web App скрипт -->
+    <!-- Telegram Web App -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Chart.js для красивой диаграммы -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Плавные анимации и кастомный скроллбар */
+        * { transition: all 0.25s ease; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 4px; }
+        .red-glow { box-shadow: 0 0 25px rgba(220, 38, 38, 0.2); }
+    </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen p-4 pb-20">
+<body class="bg-black text-zinc-100 font-sans min-h-screen p-4 pb-24 selection:bg-red-600 selection:text-white">
 
     <div class="max-w-md mx-auto">
-        <!-- Шапка -->
+        <!-- Шапка (без лишнего текста) -->
         <header class="flex justify-between items-center mb-6 mt-2">
             <div>
-                <h1 class="text-2xl font-bold tracking-tight text-white">Твой Трек Тренировок 💪</h1>
-                <p class="text-xs text-slate-400">Рекомпозиция тела • 176 см / 64 кг</p>
+                <h1 class="text-2xl font-black tracking-wider uppercase text-white">ELITE <span class="text-red-600">SYSTEM</span></h1>
             </div>
-            <div id="user-badge" class="bg-indigo-600/30 text-indigo-400 px-3 py-1 rounded-full text-xs font-medium border border-indigo-500/30">
-                PRO
+            <div class="bg-red-950/40 text-red-500 px-3 py-1 rounded-full text-xs font-bold border border-red-600/30 tracking-widest uppercase">
+                V 2.0
             </div>
         </header>
 
         <!-- Навигация по вкладкам -->
-        <div class="flex bg-slate-900 p-1 rounded-2xl mb-6 border border-slate-800">
-            <button onclick="switchTab('workouts')" id="tab-workouts" class="flex-1 py-2 text-sm font-semibold rounded-xl bg-indigo-600 text-white transition">План</button>
-            <button onclick="switchTab('history')" id="tab-history" class="flex-1 py-2 text-sm font-semibold rounded-xl text-slate-400 hover:text-white transition">История</button>
+        <div class="grid grid-cols-3 gap-1 bg-zinc-900/90 p-1.5 rounded-2xl mb-6 border border-zinc-800">
+            <button onclick="switchTab('workouts')" id="tab-workouts" class="py-2.5 text-xs font-bold rounded-xl bg-red-600 text-white shadow-lg shadow-red-600/30 uppercase tracking-wider">План</button>
+            <button onclick="switchTab('tasks')" id="tab-tasks" class="py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider">Задачи</button>
+            <button onclick="switchTab('stats')" id="tab-stats" class="py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider">Статы</button>
         </div>
 
-        <!-- Вкладка 1: План тренировок -->
+        <!-- ВКЛАДКА 1: ТРЕНИРОВКИ -->
         <div id="content-workouts" class="space-y-4">
             <!-- День 1: Универ -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+            <div class="bg-zinc-900/80 border border-zinc-800/80 hover:border-red-600/50 rounded-2xl p-5 shadow-xl backdrop-blur-md">
                 <div class="flex justify-between items-start mb-3">
                     <div>
-                        <span class="text-xs font-semibold text-indigo-400 uppercase tracking-wider">День 1</span>
-                        <h3 class="text-lg font-bold text-white">🏋️ Университет (Гантели)</h3>
+                        <span class="text-[10px] font-black text-red-500 uppercase tracking-widest">День 1 • Зал</span>
+                        <h3 class="text-lg font-extrabold text-white">Университет (Гантели)</h3>
                     </div>
                 </div>
-                <ul class="space-y-2 text-sm text-slate-300 mb-4">
-                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-indigo-500 rounded-full"></span> Жим от груди в тренажере (3х8-12)</li>
-                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-indigo-500 rounded-full"></span> Верхняя тяга к груди (3х8-12)</li>
-                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-indigo-500 rounded-full"></span> Приседания с гантелями (3х10-12)</li>
-                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-indigo-500 rounded-full"></span> Румынская тяга с гантелями (3х10-12)</li>
-                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-indigo-500 rounded-full"></span> Махи гантелями в стороны (3х12-15)</li>
+                <ul class="space-y-2 text-sm text-zinc-300 mb-5">
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> Жим от груди в тренажере (3х8-12)</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> Верхняя тяга к груди (3х8-12)</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> Приседания с гантелями (3х10-12)</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> Румынская тяга с гантелями (3х10-12)</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> Махи гантелями в стороны (3х12-15)</li>
                 </ul>
-                <button onclick="completeWorkout('🏋️ Универ (Гантели)')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 rounded-xl transition shadow-lg shadow-indigo-600/20 active:scale-95">
-                    ✅ Завершить тренировку
+                <button onclick="completeActivity('🏋️ Тренировка: Универ', 'workout')" class="w-full bg-red-600 hover:bg-red-500 active:scale-95 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-red-600/30 uppercase tracking-wider text-xs">
+                    Завершить тренировку 🔥
                 </button>
             </div>
 
             <!-- День 2: Дома -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+            <div class="bg-zinc-900/80 border border-zinc-800/80 hover:border-red-600/50 rounded-2xl p-5 shadow-xl backdrop-blur-md">
                 <div class="flex justify-between items-start mb-3">
                     <div>
-                        <span class="text-xs font-semibold text-emerald-400 uppercase tracking-wider">День 2</span>
-                        <h3 class="text-lg font-bold text-white">🏠 Дом (Турник + Вес)</h3>
+                        <span class="text-[10px] font-black text-red-500 uppercase tracking-widest">День 2 • Дом</span>
+                        <h3 class="text-lg font-extrabold text-white">Дома (Турник + Вес)</h3>
                     </div>
                 </div>
-                <ul class="space-y-2 text-sm text-slate-300 mb-4">
-                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span> Подтягивания на турнике (3-4х макс)</li>
-                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span> Отжимания от пола (4х12-20)</li>
-                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span> Болгарские выпады (3х10-12)</li>
-                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span> Планка (3х45-60 сек)</li>
-                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span> Скручивания на пресс (3х15-20)</li>
+                <ul class="space-y-2 text-sm text-zinc-300 mb-5">
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> Подтягивания на турнике (3-4х макс)</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> Отжимания от пола (4х12-20)</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> Болгарские выпады (3х10-12)</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> Планка (3х45-60 сек)</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> Скручивания на пресс (3х15-20)</li>
                 </ul>
-                <button onclick="completeWorkout('🏠 Дом (Турник)')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 rounded-xl transition shadow-lg shadow-emerald-600/20 active:scale-95">
-                    ✅ Завершить тренировку
+                <button onclick="completeActivity('🏠 Тренировка: Дом', 'workout')" class="w-full bg-red-600 hover:bg-red-500 active:scale-95 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-red-600/30 uppercase tracking-wider text-xs">
+                    Завершить тренировку 🔥
                 </button>
             </div>
         </div>
 
-        <!-- Вкладка 2: История -->
-        <div id="content-history" class="hidden space-y-3">
-            <div class="flex justify-between items-center mb-2">
-                <h2 class="text-lg font-bold text-white">Журнал тренировок</h2>
-                <button onclick="clearHistory()" class="text-xs text-red-400 hover:text-red-300">Очистить</button>
+        <!-- ВКЛАДКА 2: ЗАДАЧИ -->
+        <div id="content-tasks" class="hidden space-y-4">
+            <!-- Форма добавления задачи -->
+            <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-4 shadow-xl">
+                <h2 class="text-sm font-bold text-zinc-300 mb-3 uppercase tracking-wider">Новая задача</h2>
+                <div class="flex gap-2">
+                    <input type="text" id="taskInput" placeholder="Сделать проект, купить продукты..." class="flex-1 bg-black border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-red-600 transition">
+                    <button onclick="addTask()" class="bg-red-600 hover:bg-red-500 active:scale-95 text-white px-5 rounded-xl font-bold text-sm transition">＋</button>
+                </div>
             </div>
-            <div id="history-list" class="space-y-2">
-                <!-- Сюда динамически добавляются записи -->
+
+            <!-- Список задач -->
+            <div id="tasks-list" class="space-y-2.5">
+                <!-- Сюда падают задачи -->
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 3: СТАТИСТИКА И ДИАГРАММА -->
+        <div id="content-stats" class="hidden space-y-4">
+            <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl text-center">
+                <h2 class="text-sm font-bold text-zinc-300 mb-4 uppercase tracking-wider">Продуктивность</h2>
+                
+                <!-- Контейнер для диаграммы Chart.js -->
+                <div class="relative w-full h-64 flex justify-center items-center">
+                    <canvas id="productivityChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-4 flex justify-around text-center">
+                <div>
+                    <p class="text-xs text-zinc-400 uppercase tracking-wider font-bold">Тренировок</p>
+                    <p id="stat-workouts" class="text-2xl font-black text-red-500 mt-1">0</p>
+                </div>
+                <div class="border-r border-zinc-800"></div>
+                <div>
+                    <p class="text-xs text-zinc-400 uppercase tracking-wider font-bold">Задач выполнено</p>
+                    <p id="stat-tasks" class="text-2xl font-black text-white mt-1">0</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Скрипты логики -->
+    <!-- Логика приложения -->
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Раскрываем мини-аппу на весь экран
+        tg.expand();
+
+        let myChart = null;
 
         function switchTab(tab) {
-            const workoutsTab = document.getElementById('tab-workouts');
-            const historyTab = document.getElementById('tab-history');
-            const workoutsContent = document.getElementById('content-workouts');
-            const historyContent = document.getElementById('content-history');
+            const tabs = ['workouts', 'tasks', 'stats'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                const content = document.getElementById(`content-${t}`);
+                if (t === tab) {
+                    btn.className = "py-2.5 text-xs font-bold rounded-xl bg-red-600 text-white shadow-lg shadow-red-600/30 uppercase tracking-wider";
+                    content.classList.remove('hidden');
+                } else {
+                    btn.className = "py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider";
+                    content.classList.add('hidden');
+                }
+            });
 
-            if (tab === 'workouts') {
-                workoutsTab.className = "flex-1 py-2 text-sm font-semibold rounded-xl bg-indigo-600 text-white transition";
-                historyTab.className = "flex-1 py-2 text-sm font-semibold rounded-xl text-slate-400 hover:text-white transition";
-                workoutsContent.classList.remove('hidden');
-                historyContent.classList.add('hidden');
-            } else {
-                historyTab.className = "flex-1 py-2 text-sm font-semibold rounded-xl bg-indigo-600 text-white transition";
-                workoutsTab.className = "flex-1 py-2 text-sm font-semibold rounded-xl text-slate-400 hover:text-white transition";
-                historyContent.classList.remove('hidden');
-                workoutsContent.classList.add('hidden');
-                renderHistory();
+            if (tab === 'stats') {
+                updateStats();
             }
         }
 
-        function completeWorkout(name) {
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }) + ' в ' + now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-            
-            let history = JSON.parse(localStorage.getItem('workout_history') || '[]');
-            history.unshift({ name, date: dateStr });
-            localStorage.setItem('workout_history', JSON.stringify(history));
+        // --- УПРАВЛЕНИЕ ТРЕНИРОВКАМИ ---
+        function completeActivity(name, type) {
+            let stats = JSON.parse(localStorage.getItem('elite_stats') || '{"workouts": 0, "tasks": 0}');
+            if (type === 'workout') stats.workouts += 1;
+            localStorage.setItem('elite_stats', JSON.stringify(stats));
 
             if (tg && tg.HapticFeedback) {
                 tg.HapticFeedback.notificationOccurred('success');
             }
-
-            alert(`🔥 Отлично! Тренировка "${name}" успешно записана!`);
-            switchTab('history');
+            alert(`🔥 Отлично! "${name}" зафиксирована в системе.`);
+            switchTab('stats');
         }
 
-        function renderHistory() {
-            const listEl = document.getElementById('history-list');
-            let history = JSON.parse(localStorage.getItem('workout_history') || '[]');
-            
-            if (history.length === 0) {
-                listEl.innerHTML = `<div class="text-center py-12 text-slate-500 text-sm">Пока нет завершенных тренировок.<br>Самое время начать! 🚀</div>`;
+        // --- УПРАВЛЕНИЕ ЗАДАЧАМИ ---
+        function getTasks() {
+            return JSON.parse(localStorage.getItem('elite_tasks') || '[]');
+        }
+
+        function saveTasks(tasks) {
+            localStorage.setItem('elite_tasks', JSON.stringify(tasks));
+            renderTasks();
+        }
+
+        function addTask() {
+            const input = document.getElementById('taskInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            let tasks = getTasks();
+            tasks.unshift({ id: Date.now(), text, completed: false });
+            input.value = '';
+            saveTasks(tasks);
+        }
+
+        function toggleTask(id) {
+            let tasks = getTasks();
+            tasks = tasks.map(t => {
+                if (t.id === id) {
+                    t.completed = !t.completed;
+                    if (t.completed) {
+                        let stats = JSON.parse(localStorage.getItem('elite_stats') || '{"workouts": 0, "tasks": 0}');
+                        stats.tasks += 1;
+                        localStorage.setItem('elite_stats', JSON.stringify(stats));
+                    }
+                }
+                return t;
+            });
+            saveTasks(tasks);
+        }
+
+        function deleteTask(id) {
+            let tasks = getTasks();
+            tasks = tasks.filter(t => t.id !== id);
+            saveTasks(tasks);
+        }
+
+        function renderTasks() {
+            const listEl = document.getElementById('tasks-list');
+            const tasks = getTasks();
+
+            if (tasks.length === 0) {
+                listEl.innerHTML = `<div class="text-center py-12 text-zinc-600 text-xs uppercase tracking-widest">Список задач пуст</div>`;
                 return;
             }
 
-            listEl.innerHTML = history.map(item => `
-                bg-slate-900 border border-slate-800 rounded-xl p-3 flex justify-between items-center text-sm
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 flex justify-between items-center text-sm w-full">
-                    <span class="font-medium text-white">${item.name}</span>
-                    <span class="text-xs text-slate-400">${item.date}</span>
+            listEl.innerHTML = tasks.map(t => `
+                <div class="bg-zinc-900/80 border ${t.completed ? 'border-zinc-800/40 opacity-60' : 'border-zinc-800'} rounded-xl p-3.5 flex justify-between items-center gap-3">
+                    <div class="flex items-center gap-3 flex-1 cursor-pointer" onclick="toggleTask(${t.id})">
+                        <div class="w-5 h-5 rounded-lg border ${t.completed ? 'bg-red-600 border-red-600 flex items-center justify-center text-white text-xs' : 'border-zinc-700'} transition">
+                            ${t.completed ? '✓' : ''}
+                        </div>
+                        <span class="text-sm font-medium ${t.completed ? 'line-through text-zinc-500' : 'text-zinc-200'}">${t.text}</span>
+                    </div>
+                    <button onclick="deleteTask(${t.id})" class="text-zinc-600 hover:text-red-500 text-xs px-2 py-1">✕</button>
                 </div>
             `).join('');
         }
 
-        function clearHistory() {
-            if (confirm('Очистить всю историю?')) {
-                localStorage.removeItem('workout_history');
-                renderHistory();
+        // --- СТАТИСТИКА И ДИАГРАММА ---
+        function updateStats() {
+            const stats = JSON.parse(localStorage.getItem('elite_stats') || '{"workouts": 0, "tasks": 0}');
+            document.getElementById('stat-workouts').innerText = stats.workouts;
+            document.getElementById('stat-tasks').innerText = stats.tasks;
+
+            const ctx = document.getElementById('productivityChart').getContext('2d');
+            
+            if (myChart) {
+                myChart.destroy();
             }
+
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Тренировки', 'Задачи'],
+                    datasets: [{
+                        data: [stats.workouts, stats.tasks],
+                        backgroundColor: ['#dc2626', '#3f3f46'],
+                        borderColor: '#000000',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#a1a1aa',
+                                font: { size: 11, family: 'sans-serif', weight: 'bold' }
+                            }
+                        }
+                    }
+                }
+            });
         }
+
+        // Инициализация при старте
+        renderTasks();
     </script>
 </body>
 </html>
