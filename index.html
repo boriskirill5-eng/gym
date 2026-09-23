@@ -15,6 +15,7 @@
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #8b5cf6; border-radius: 4px; }
         
+        /* Элитный Cyber Luxe Glass */
         .glass-panel {
             background: rgba(13, 13, 20, 0.75);
             backdrop-filter: blur(20px);
@@ -53,6 +54,17 @@
             transform: rotate(180deg);
         }
 
+        /* Плавный разблокировщик */
+        #lock-screen {
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #lock-screen.unlocking {
+            opacity: 0;
+            transform: scale(1.12);
+            filter: blur(12px);
+            pointer-events: none;
+        }
+
         body {
             background: radial-gradient(circle at 50% -20%, #2e1065 0%, #09090b 55%, #000000 100%);
             overflow-x: hidden;
@@ -61,19 +73,16 @@
 </head>
 <body class="text-zinc-100 font-sans min-h-screen p-4 pb-28 selection:bg-violet-600 selection:text-white">
 
-    <!-- СТАРТОВАЯ СТРАНИЦА (ЛОК-СКРИН С ЗАЖАТИЕМ) -->
+    <!-- НОВЫЙ СТАРТОВЫЙ ЭКРАН (LOCK SCREEN) -->
     <div id="lock-screen" class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center p-6 text-center select-none cursor-pointer">
-        <div class="relative w-36 h-36 flex items-center justify-center mb-6">
-            <!-- Интерактивное кольцо прогресса зажатия -->
-            <div id="hold-ring" class="absolute inset-0 rounded-full border-2 border-violet-500/20 transition-all duration-75"></div>
-            <div class="absolute inset-3 rounded-full bg-violet-950/40 border border-violet-500/40 flex items-center justify-center shadow-[0_0_35px_rgba(139,92,246,0.3)] animate-pulse">
-                <span class="text-3xl">⚡</span>
-            </div>
+        <div id="core-btn" class="relative w-32 h-32 flex items-center justify-center mb-6 rounded-full bg-violet-950/30 border border-violet-500/40 shadow-[0_0_40px_rgba(139,92,246,0.3)] transition-transform duration-300 active:scale-90">
+            <div class="absolute inset-2 rounded-full border border-violet-400/30 animate-ping opacity-75"></div>
+            <span class="text-3xl filter drop-shadow-[0_0_10px_rgba(139,92,246,0.8)]">⚡</span>
         </div>
         <h1 class="text-3xl font-black tracking-widest uppercase text-white drop-shadow-[0_0_20px_rgba(139,92,246,0.8)] mb-2">
             BACK <span class="text-violet-500">PRIME</span>
         </h1>
-        <p id="lock-subtext" class="text-xs text-zinc-400 uppercase tracking-[0.25em] font-bold transition-colors">
+        <p class="text-xs text-zinc-400 uppercase tracking-[0.25em] font-bold">
             Зажми экран, чтобы войти
         </p>
     </div>
@@ -86,7 +95,7 @@
                 <p id="header-real-date" class="text-[10px] text-violet-400 uppercase tracking-widest font-bold mt-0.5">Загрузка...</p>
             </div>
             <div class="glass-panel text-emerald-400 px-3 py-1.5 rounded-full text-[11px] font-black tracking-widest uppercase shadow-lg">
-                LUXE v13.0
+                LUXE v14.0
             </div>
         </header>
 
@@ -122,7 +131,7 @@
                     <button onclick="selectDay('sun')" id="day-btn-sun" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition-all duration-300">Вс</button>
                 </div>
 
-                <!-- Блок тренировки (сворачиваемый, только стрелочка) -->
+                <!-- Блок тренировки (сворачиваемый) -->
                 <div class="glass-panel rounded-2xl p-4 space-y-3">
                     <div class="flex justify-between items-center cursor-pointer select-none" onclick="toggleWorkoutExpand()">
                         <div class="flex items-center gap-2.5">
@@ -139,12 +148,13 @@
                     </div>
                 </div>
 
-                <!-- Задачи дня -->
+                <!-- Задачи дня (чистый интерфейс с кнопкой-модалкой) -->
                 <div class="glass-panel rounded-2xl p-4 space-y-3">
-                    <h2 class="text-xs font-bold text-zinc-300 uppercase tracking-wider">Задачи на день</h2>
-                    <div class="flex gap-2">
-                        <input type="text" id="dayTaskInput" placeholder="Новая задача..." class="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500 transition-all duration-300">
-                        <button onclick="addDayTask()" class="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white px-5 rounded-xl font-bold text-sm shadow-lg shadow-violet-600/30 transition-all duration-300 active:scale-95">＋</button>
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xs font-bold text-zinc-300 uppercase tracking-wider">Задачи на день</h2>
+                        <button onclick="openTaskModal()" class="bg-violet-600 hover:bg-violet-500 text-white px-3.5 py-1.5 rounded-xl font-bold text-xs shadow-md shadow-violet-600/30 transition-all duration-300 active:scale-95">
+                            ＋ Добавить задачу
+                        </button>
                     </div>
                     <div id="day-tasks-list" class="space-y-2 pt-1">
                         <!-- Задачи -->
@@ -164,7 +174,7 @@
                     <!-- Рендер всех тренировок с днями недели -->
                 </div>
 
-                <!-- Модалка создания -->
+                <!-- Модалка создания программы -->
                 <div id="add-workout-modal" class="hidden glass-panel rounded-2xl p-5 space-y-3 border-violet-500/40">
                     <h3 class="text-sm font-bold text-white uppercase tracking-wider">Новая программа</h3>
                     <input type="text" id="newWorkoutName" placeholder="Название..." class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500 transition">
@@ -201,70 +211,48 @@
         </div>
     </div>
 
+    <!-- МОДАЛЬНОЕ ОКНО ДОБАВЛЕНИЯ ЗАДАЧИ -->
+    <div id="task-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-panel rounded-2xl p-5 w-full max-w-sm space-y-4 border-violet-500/40 animate-in fade-in zoom-in duration-200">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Новая задача на день</h3>
+            <input type="text" id="modalTaskInput" placeholder="Введите текст задачи..." class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-violet-500 transition">
+            <div class="flex gap-2 pt-1">
+                <button onclick="saveModalTask()" class="flex-1 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-violet-600/30 transition">Добавить</button>
+                <button onclick="closeTaskModal()" class="px-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider transition">Отмена</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Логика -->
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // --- ЛОГИКА ЗАЖАТИЯ (LOCK SCREEN) ---
+        // --- ПЛАВНЫЙ РАЗБЛОКИРОВЩИК (ЗАЖАТИЕ ЭКРАНА) ---
         const lockScreen = document.getElementById('lock-screen');
-        const holdRing = document.getElementById('hold-ring');
-        const holdSubtext = document.getElementById('lock-subtext');
-        let holdStartTime = 0;
-        let holdTimerInterval = null;
-        const requiredHoldTime = 1000; // 1 секунда зажатия
+        const coreBtn = document.getElementById('core-btn');
+        let unlockTimeout = null;
 
-        function startHolding(e) {
+        function startUnlock(e) {
             e.preventDefault();
-            holdStartTime = Date.now();
-            lockScreen.classList.add('scale-95');
-            holdSubtext.innerText = "Удерживай...";
-            holdSubtext.style.color = "#8b5cf6";
-
-            holdTimerInterval = setInterval(() => {
-                let elapsed = Date.now() - holdStartTime;
-                let progress = Math.min(elapsed / requiredHoldTime, 1);
-                
-                holdRing.style.boxShadow = `0 0 ${progress * 50}px rgba(139, 92, 246, ${progress})`;
-                holdRing.style.borderColor = `rgba(139, 92, 246, ${progress})`;
-
-                if (progress >= 1) {
-                    clearInterval(holdTimerInterval);
-                    unlockApp();
-                }
-            }, 20);
-
-            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+            coreBtn.style.transform = 'scale(0.9)';
+            unlockTimeout = setTimeout(() => {
+                if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+                lockScreen.classList.add('unlocking');
+                setTimeout(() => lockScreen.remove(), 600);
+            }, 600); // 0.6 секунды зажатия
         }
 
-        function stopHolding(e) {
-            if (!holdStartTime) return;
-            clearInterval(holdTimerInterval);
-            let elapsed = Date.now() - holdStartTime;
-            holdStartTime = 0;
-            
-            lockScreen.classList.remove('scale-95');
-            holdRing.style.boxShadow = 'none';
-            holdRing.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-            holdSubtext.innerText = "Зажми экран, чтобы войти";
-            holdSubtext.style.color = "#a1a1aa";
+        function cancelUnlock() {
+            coreBtn.style.transform = 'scale(1)';
+            if (unlockTimeout) clearTimeout(unlockTimeout);
         }
 
-        function unlockApp() {
-            if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            lockScreen.style.transition = 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
-            lockScreen.style.opacity = '0';
-            lockScreen.style.transform = 'scale(1.15)';
-            setTimeout(() => {
-                lockScreen.remove();
-            }, 600);
-        }
-
-        lockScreen.addEventListener('mousedown', startHolding);
-        lockScreen.addEventListener('touchstart', startHolding, {passive: false});
-        lockScreen.addEventListener('mouseup', stopHolding);
-        lockScreen.addEventListener('touchend', stopHolding);
-        lockScreen.addEventListener('mouseleave', stopHolding);
+        lockScreen.addEventListener('mousedown', startUnlock);
+        lockScreen.addEventListener('touchstart', startUnlock, {passive: false});
+        lockScreen.addEventListener('mouseup', cancelUnlock);
+        lockScreen.addEventListener('touchend', cancelUnlock);
+        lockScreen.addEventListener('mouseleave', cancelUnlock);
 
         // --- ДАТЫ И МИНСК ---
         function getMinskTime() {
@@ -417,36 +405,51 @@
             alert('🔥 Тренировка успешно зафиксирована в статистике!');
         }
 
-        // Задачи дня
-        function getDayTasks() { return JSON.parse(localStorage.getItem(`bp_tasks_${selectedDay}`) || '[]'); }
-        function saveDayTasks(tasks) { localStorage.setItem(`bp_tasks_${selectedDay}`, JSON.stringify(tasks)); renderDayTasks(); }
+        // --- МОДАЛЬНОЕ ОКНО ЗАДАЧ ---
+        function openTaskModal() {
+            document.getElementById('task-modal').classList.remove('hidden');
+            document.getElementById('modalTaskInput').focus();
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+        }
 
-        function addDayTask() {
-            const input = document.getElementById('dayTaskInput');
+        function closeTaskModal() {
+            document.getElementById('task-modal').classList.add('hidden');
+            document.getElementById('modalTaskInput').value = '';
+        }
+
+        function saveModalTask() {
+            const input = document.getElementById('modalTaskInput');
             const text = input.value.trim();
             if (!text) return;
-            let tasks = getDayTasks();
+            
+            let tasks = JSON.parse(localStorage.getItem(`bp_tasks_${selectedDay}`) || '[]');
             tasks.unshift({ id: Date.now(), text, completed: false });
-            input.value = '';
-            saveDayTasks(tasks);
+            localStorage.setItem(`bp_tasks_${selectedDay}`, JSON.stringify(tasks));
+            
+            closeTaskModal();
+            renderDayTasks();
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
         }
 
         function toggleDayTask(id) {
-            let tasks = getDayTasks();
+            let tasks = JSON.parse(localStorage.getItem(`bp_tasks_${selectedDay}`) || '[]');
             tasks = tasks.map(t => { if (t.id === id) t.completed = !t.completed; return t; });
-            saveDayTasks(tasks);
+            localStorage.setItem(`bp_tasks_${selectedDay}`, JSON.stringify(tasks));
+            renderDayTasks();
             if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         }
 
         function deleteDayTask(id) {
-            let tasks = getDayTasks();
+            let tasks = JSON.parse(localStorage.getItem(`bp_tasks_${selectedDay}`) || '[]');
             tasks = tasks.filter(t => t.id !== id);
-            saveDayTasks(tasks);
+            localStorage.setItem(`bp_tasks_${selectedDay}`, JSON.stringify(tasks));
+            renderDayTasks();
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
         }
 
         function renderDayTasks() {
             const listEl = document.getElementById('day-tasks-list');
-            let tasks = getDayTasks();
+            let tasks = JSON.parse(localStorage.getItem(`bp_tasks_${selectedDay}`) || '[]');
             if (tasks.length === 0) {
                 listEl.innerHTML = `<p class="text-xs text-zinc-500 italic">Нет задач на этот день</p>`;
                 return;
