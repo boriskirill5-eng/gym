@@ -11,7 +11,6 @@
     <!-- Chart.js для диаграмм -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Оптимизация производительности: убрали тяжелые глобальные transition */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #8b5cf6; border-radius: 4px; }
         
@@ -21,15 +20,11 @@
             box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.5);
         }
 
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
         #splash-screen {
-            animation: splashFade 0.4s ease 1.2s forwards;
+            animation: splashFade 0.4s ease 1s forwards;
         }
         @keyframes splashFade {
             0% { opacity: 1; visibility: visible; }
@@ -52,7 +47,7 @@
                 BACK <span class="text-violet-500">PRIME</span>
             </h1>
         </div>
-        <p class="text-xs text-zinc-400 uppercase tracking-[0.3em] mt-3 font-bold">Синхронизация дней...</p>
+        <p id="splash-date" class="text-xs text-zinc-400 uppercase tracking-[0.2em] mt-3 font-bold">Синхронизация по Минску...</p>
     </div>
 
     <div class="max-w-md mx-auto relative">
@@ -60,10 +55,10 @@
         <header class="flex justify-between items-center mb-3 mt-2">
             <div>
                 <h1 class="text-2xl font-black tracking-widest uppercase text-white">BACK <span class="text-violet-400">PRIME</span></h1>
-                <p class="text-[10px] text-zinc-400 uppercase tracking-widest font-bold">Weekly Planner v10.0</p>
+                <p id="header-real-date" class="text-[10px] text-violet-400 uppercase tracking-widest font-bold">Загрузка даты...</p>
             </div>
-            <div class="glass-panel text-violet-400 px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase">
-                ACTIVE
+            <div class="glass-panel text-emerald-400 px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase">
+                LIVE
             </div>
         </header>
 
@@ -74,19 +69,19 @@
             </p>
         </div>
 
-        <!-- Навигация по главным разделам -->
+        <!-- Навигация -->
         <div class="grid grid-cols-3 gap-1.5 glass-panel p-1.5 rounded-2xl mb-6 relative z-10">
-            <button onclick="switchMainTab('planner')" id="m-tab-planner" class="py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg uppercase tracking-wider">Планер</button>
+            <button onclick="switchMainTab('planner')" id="m-tab-planner" class="py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg uppercase tracking-wider">План дня</button>
             <button onclick="switchMainTab('workouts')" id="m-tab-workouts" class="py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider">База</button>
             <button onclick="switchMainTab('stats')" id="m-tab-stats" class="py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider">Статы</button>
         </div>
 
-        <!-- РАЗДЕЛ 1: ПЛАНЕР ПО ДНЯМ НЕДЕЛИ -->
+        <!-- РАЗДЕЛ 1: ПЛАНЕР (ПРИВЯЗАН К РЕАЛЬНОМУ ВРЕМЕНИ МИНСКА) -->
         <div id="main-content-planner" class="tab-content active space-y-4">
             
-            <!-- Выбор дня недели -->
+            <!-- Переключатель дней недели (с индикатором СЕГОДНЯ) -->
             <div class="flex gap-1 overflow-x-auto pb-1 no-scrollbar">
-                <button onclick="selectDay('mon')" id="day-btn-mon" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-violet-600 text-white transition">Пн</button>
+                <button onclick="selectDay('mon')" id="day-btn-mon" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition">Пн</button>
                 <button onclick="selectDay('tue')" id="day-btn-tue" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition">Вт</button>
                 <button onclick="selectDay('wed')" id="day-btn-wed" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition">Ср</button>
                 <button onclick="selectDay('thu')" id="day-btn-thu" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition">Чт</button>
@@ -95,28 +90,34 @@
                 <button onclick="selectDay('sun')" id="day-btn-sun" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition">Вс</button>
             </div>
 
-            <!-- Блок тренировки на выбранный день -->
+            <!-- Плашка текущего дня -->
+            <div id="today-banner" class="hidden bg-violet-600/20 border border-violet-500/40 rounded-xl px-4 py-2 flex justify-between items-center text-xs text-violet-300 font-bold">
+                <span>🔥 Сегодня по расписанию</span>
+                <span id="today-label">Университетский день</span>
+            </div>
+
+            <!-- Тренировка на выбранный день -->
             <div class="glass-panel rounded-2xl p-4 space-y-3">
                 <div class="flex justify-between items-center">
-                    <h2 class="text-xs font-bold text-violet-400 uppercase tracking-wider">Тренировка на этот день</h2>
+                    <h2 class="text-xs font-bold text-violet-400 uppercase tracking-wider">Тренировка</h2>
                     <select id="dayWorkoutSelect" onchange="assignWorkoutToDay(this.value)" class="bg-black/50 border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none">
-                        <option value="">(Нет тренировки)</option>
+                        <option value="">(Без тренировки)</option>
                     </select>
                 </div>
                 <div id="day-workout-container" class="text-sm text-zinc-300">
-                    <!-- Сюда выводится план выбранной тренировки -->
+                    <!-- План тренировки -->
                 </div>
             </div>
 
-            <!-- Блок задач на выбранный день -->
+            <!-- Задачи на выбранный день -->
             <div class="glass-panel rounded-2xl p-4 space-y-3">
                 <h2 class="text-xs font-bold text-zinc-300 uppercase tracking-wider">Задачи на день</h2>
                 <div class="flex gap-2">
-                    <input type="text" id="dayTaskInput" placeholder="Сделать задачу..." class="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+                    <input type="text" id="dayTaskInput" placeholder="Добавить задачу на этот день..." class="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
                     <button onclick="addDayTask()" class="bg-violet-600 text-white px-4 rounded-xl font-bold text-sm">＋</button>
                 </div>
                 <div id="day-tasks-list" class="space-y-2 pt-1">
-                    <!-- Задачи дня -->
+                    <!-- Задачи -->
                 </div>
             </div>
 
@@ -128,15 +129,12 @@
                 <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Все программы</h2>
                 <button onclick="openAddWorkoutModal()" class="text-xs text-violet-400 font-bold uppercase tracking-wider">＋ Создать</button>
             </div>
-            <div id="all-workouts-list" class="space-y-2.5">
-                <!-- Рендер всех тренировок -->
-            </div>
+            <div id="all-workouts-list" class="space-y-2.5"></div>
 
-            <!-- Модалка создания тренировки -->
             <div id="add-workout-modal" class="hidden glass-panel rounded-2xl p-5 space-y-3 border-violet-500/40">
                 <h3 class="text-sm font-bold text-white uppercase tracking-wider">Новая программа</h3>
-                <input type="text" id="newWorkoutName" placeholder="Название (например: День 3 • Руки)..." class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500">
-                <textarea id="newWorkoutExercises" placeholder="Упражнения (каждое с новой строки):&#10;Бицепс 3х10&#10;Трицепс 3х12" rows="4" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500"></textarea>
+                <input type="text" id="newWorkoutName" placeholder="Название..." class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500">
+                <textarea id="newWorkoutExercises" placeholder="Упражнения (каждое с новой строки):&#10;Упр 1&#10;Упр 2" rows="4" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500"></textarea>
                 <div class="flex gap-2 pt-1">
                     <button onclick="saveNewWorkout()" class="flex-1 bg-violet-600 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider">Сохранить</button>
                     <button onclick="closeAddWorkoutModal()" class="px-4 bg-zinc-800 text-zinc-300 font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider">Отмена</button>
@@ -167,33 +165,59 @@
         </div>
     </div>
 
-    <!-- Логика -->
+    <!-- Логика реального времени (Минск UTC+3) -->
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        // Получаем реальную дату и день недели по Минску (UTC+3)
+        function getMinskTime() {
+            const now = new Date();
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const minskDate = new Date(utc + (3600000 * 3));
+            return minskDate;
+        }
+
+        const dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+        const dayNames = { mon: 'Понедельник', tue: 'Вторник', wed: 'Среда', thu: 'Четверг', fri: 'Пятница', sat: 'Суббота', sun: 'Воскресенье' };
+        
+        const minskNow = getMinskTime();
+        const currentRealDayKey = dayKeys[minskNow.getDay()];
+        
+        // Красивый вывод даты в шапку
+        const options = { weekday: 'long', day: 'numeric', month: 'long' };
+        document.getElementById('header-real-date').innerText = minskNow.toLocaleDateString('ru-RU', options);
+        document.getElementById('splash-date').innerText = minskNow.toLocaleDateString('ru-RU', options);
+
+        let selectedDay = currentRealDayKey;
+
+        // Авто-привязка тренировок универа по умолчанию для пн и чт (если расписание еще пустое)
+        function initDefaultSchedule() {
+            let schedule = JSON.parse(localStorage.getItem('bp_schedule') || '{}');
+            if (!schedule['mon'] && !schedule['thu']) {
+                schedule['mon'] = { workoutId: 'gym', checkedExercises: {} };
+                schedule['thu'] = { workoutId: 'gym', checkedExercises: {} };
+                localStorage.setItem('bp_schedule', JSON.stringify(schedule));
+            }
+        }
+        initDefaultSchedule();
+
+        // Цитаты
         const quotes = [
             "Дисциплина — это мост между твоими целями и достижениями.",
             "Боль временна, гордость за себя останется навсегда.",
             "Твое тело — это единственный дом, в котором тебе жить.",
             "Сегодня ты делаешь то, что другие не хотят, завтра живешь так, как другие не могут.",
-            "Каждое повторение приближает тебя к твоей лучшей версии.",
-            "Слабые жалуются на усталость, сильные двигаются дальше.",
-            "Успех — это сумма маленьких усилий, повторяемых изо дня в день.",
-            "Не жди идеального момента, возьми его и сделай.",
-            "Твой единственный соперник — это ты в зеркале вчера.",
-            "Каждый шаг вперед побеждает страх."
+            "Каждое повторение приближает тебя к твоей лучшей версии."
         ];
         document.getElementById('motivational-quote').innerText = `«${quotes[Math.floor(Math.random() * quotes.length)]}»`;
 
-        let currentDay = 'mon';
         let dailyChartInstance = null;
         let overallChartInstance = null;
 
-        // Базовые тренировки
         const defaultWorkouts = [
-            { id: 'gym', isDefault: true, title: '🏋️ Университет (Гантели)', tag: 'Зал', exercises: ['Жим от груди (3х12)', 'Верхняя тяга (3х12)', 'Приседания с гантелями (3х12)', 'Румынская тяга (3х12)', 'Махи в стороны (3х15)'] },
-            { id: 'home', isDefault: true, title: '🏠 Дом (Турник + Вес)', tag: 'Дом', exercises: ['Подтягивания (3х макс)', 'Отжимания (4х20)', 'Болгарские выпады (3х12)', 'Планка (3х60с)', 'Пресс (3х20)'] }
+            { id: 'gym', isDefault: true, title: '🏋️ Университет (Гантели + Тренажеры)', tag: 'Зал', exercises: ['Жим от груди в тренажере (3х8-12)', 'Верхняя тяга к груди (3х8-12)', 'Приседания с гантелями (3х10-12)', 'Румынская тяга с гантелями (3х10-12)', 'Махи гантелями в стороны (3х12-15)'] },
+            { id: 'home', isDefault: true, title: '🏠 Дом (Турник + Вес)', tag: 'Дом', exercises: ['Подтягивания на турнике (3-4х макс)', 'Отжимания от пола (4х12-20)', 'Болгарские выпады (3х10-12)', 'Планка (3х45-60 сек)', 'Скручивания на пресс (3х15-20)'] }
         ];
 
         function getWorkouts() {
@@ -219,44 +243,52 @@
             }
         }
 
-        // --- ПЛАНЕР ПО ДНЯМ ---
+        // --- ПЛАНЕР ---
         function selectDay(day) {
-            currentDay = day;
+            selectedDay = day;
             ['mon','tue','wed','thu','fri','sat','sun'].forEach(d => {
                 const btn = document.getElementById(`day-btn-${d}`);
                 if (d === day) {
-                    btn.className = "flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-violet-600 text-white transition";
+                    btn.className = "flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-violet-600 text-white transition shadow-lg shadow-violet-600/30";
                 } else {
                     btn.className = "flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition";
                 }
             });
+
+            // Показываем плашку, если выбран реальный сегодняшний день
+            const banner = document.getElementById('today-banner');
+            if (day === currentRealDayKey) {
+                banner.classList.remove('hidden');
+                document.getElementById('today-label').innerText = `${dayNames[day]} (Сегодня)`;
+            } else {
+                banner.classList.add('hidden');
+            }
+
             renderDayPlanner();
         }
 
         function renderDayPlanner() {
-            // Заполнить селект тренировок
             const select = document.getElementById('dayWorkoutSelect');
             const workouts = getWorkouts();
             let schedule = JSON.parse(localStorage.getItem('bp_schedule') || '{}');
-            let assignedId = schedule[currentDay]?.workoutId || '';
+            let assignedId = schedule[selectedDay]?.workoutId || '';
 
             select.innerHTML = `<option value="">(Без тренировки)</option>` + workouts.map(w => `
                 <option value="${w.id}" ${assignedId === w.id ? 'selected' : ''}>${w.title}</option>
             `).join('');
 
-            // Рендер назначенной тренировки
             const wContainer = document.getElementById('day-workout-container');
             if (!assignedId) {
                 wContainer.innerHTML = `<p class="text-xs text-zinc-500 italic">На этот день тренировка не назначена</p>`;
             } else {
                 let w = workouts.find(item => item.id == assignedId);
                 if (w) {
-                    let checkedMap = schedule[currentDay]?.checkedExercises || {};
+                    let checkedMap = schedule[selectedDay]?.checkedExercises || {};
                     wContainer.innerHTML = `
                         <p class="font-bold text-white mb-2">${w.title}</p>
                         <div class="space-y-1.5">
                             ${w.exercises.map((ex, idx) => `
-                                <div onclick="toggleDayExercise('${currentDay}',${idx})" class="bg-black/30 border border-white/5 rounded-lg p-2.5 flex items-center gap-2.5 cursor-pointer">
+                                <div onclick="toggleDayExercise('${selectedDay}',${idx})" class="bg-black/30 border border-white/5 rounded-lg p-2.5 flex items-center gap-2.5 cursor-pointer">
                                     <div class="w-4 h-4 rounded border ${checkedMap[idx] ? 'bg-emerald-600 border-emerald-600 text-white text-[10px] flex items-center justify-center' : 'border-white/20'}">${checkedMap[idx] ? '✓' : ''}</div>
                                     <span class="text-xs ${checkedMap[idx] ? 'line-through text-zinc-500' : 'text-zinc-200'}">${ex}</span>
                                 </div>
@@ -266,16 +298,14 @@
                     `;
                 }
             }
-
-            // Рендер задач дня
             renderDayTasks();
         }
 
         function assignWorkoutToDay(wId) {
             let schedule = JSON.parse(localStorage.getItem('bp_schedule') || '{}');
-            if (!schedule[currentDay]) schedule[currentDay] = {};
-            schedule[currentDay].workoutId = wId;
-            schedule[currentDay].checkedExercises = {};
+            if (!schedule[selectedDay]) schedule[selectedDay] = {};
+            schedule[selectedDay].workoutId = wId;
+            schedule[selectedDay].checkedExercises = {};
             localStorage.setItem('bp_schedule', JSON.stringify(schedule));
             renderDayPlanner();
         }
@@ -291,15 +321,15 @@
 
         function finishDayWorkout(wName) {
             let history = JSON.parse(localStorage.getItem('bp_history') || '[]');
-            history.push({ id: Date.now(), type: 'workout', name: wName, date: new Date().toISOString().split('T')[0] });
+            history.push({ id: Date.now(), type: 'workout', name: wName, date: minskNow.toISOString().split('T')[0] });
             localStorage.setItem('bp_history', JSON.stringify(history));
             if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            alert('🔥 Тренировка зафиксирована в статистике!');
+            alert('🔥 Тренировка успешно зафиксирована в статистике!');
         }
 
         // Задачи дня
-        function getDayTasks() { return JSON.parse(localStorage.getItem(`bp_tasks_${currentDay}`) || '[]'); }
-        function saveDayTasks(tasks) { localStorage.setItem(`bp_tasks_${currentDay}`, JSON.stringify(tasks)); renderDayTasks(); }
+        function getDayTasks() { return JSON.parse(localStorage.getItem(`bp_tasks_${selectedDay}`) || '[]'); }
+        function saveDayTasks(tasks) { localStorage.setItem(`bp_tasks_${selectedDay}`, JSON.stringify(tasks)); renderDayTasks(); }
 
         function addDayTask() {
             const input = document.getElementById('dayTaskInput');
@@ -435,8 +465,8 @@
             });
         }
 
-        // Инициализация при старте
-        selectDay('mon');
+        // Авто-запуск с выбора РЕАЛЬНОГО СЕГОДНЯШНЕГО ДНЯ
+        selectDay(currentRealDayKey);
         renderAllWorkouts();
     </script>
 </body>
