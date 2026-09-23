@@ -3,35 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elite Hub Mini App</title>
+    <title>BACK PRIME</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Telegram Web App -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Chart.js для красивой диаграммы -->
+    <!-- Chart.js для диаграмм -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Плавные анимации и кастомный скроллбар */
-        * { transition: all 0.25s ease; }
+        * { transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease; }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 4px; }
-        .red-glow { box-shadow: 0 0 25px rgba(220, 38, 38, 0.2); }
+        .task-card { will-change: transform; touch-action: pan-y; }
     </style>
 </head>
-<body class="bg-black text-zinc-100 font-sans min-h-screen p-4 pb-24 selection:bg-red-600 selection:text-white">
+<body class="bg-black text-zinc-100 font-sans min-h-screen p-4 pb-24 selection:bg-red-600 selection:text-white overflow-x-hidden">
 
     <div class="max-w-md mx-auto">
-        <!-- Шапка (без лишнего текста) -->
+        <!-- Шапка -->
         <header class="flex justify-between items-center mb-6 mt-2">
             <div>
-                <h1 class="text-2xl font-black tracking-wider uppercase text-white">ELITE <span class="text-red-600">SYSTEM</span></h1>
+                <h1 class="text-2xl font-black tracking-widest uppercase text-white">BACK <span class="text-red-600">PRIME</span></h1>
+                <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">System Control v3.0</p>
             </div>
-            <div class="bg-red-950/40 text-red-500 px-3 py-1 rounded-full text-xs font-bold border border-red-600/30 tracking-widest uppercase">
-                V 2.0
+            <div class="bg-red-950/40 text-red-500 px-3 py-1 rounded-full text-xs font-black border border-red-600/30 tracking-widest uppercase shadow-lg shadow-red-600/20">
+                ACTIVE
             </div>
         </header>
 
-        <!-- Навигация по вкладкам -->
+        <!-- Навигация -->
         <div class="grid grid-cols-3 gap-1 bg-zinc-900/90 p-1.5 rounded-2xl mb-6 border border-zinc-800">
             <button onclick="switchTab('workouts')" id="tab-workouts" class="py-2.5 text-xs font-bold rounded-xl bg-red-600 text-white shadow-lg shadow-red-600/30 uppercase tracking-wider">План</button>
             <button onclick="switchTab('tasks')" id="tab-tasks" class="py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider">Задачи</button>
@@ -40,12 +40,11 @@
 
         <!-- ВКЛАДКА 1: ТРЕНИРОВКИ -->
         <div id="content-workouts" class="space-y-4">
-            <!-- День 1: Универ -->
-            <div class="bg-zinc-900/80 border border-zinc-800/80 hover:border-red-600/50 rounded-2xl p-5 shadow-xl backdrop-blur-md">
+            <div class="bg-zinc-900/80 border border-zinc-800 hover:border-red-600/50 rounded-2xl p-5 shadow-xl">
                 <div class="flex justify-between items-start mb-3">
                     <div>
-                        <span class="text-[10px] font-black text-red-500 uppercase tracking-widest">День 1 • Зал</span>
-                        <h3 class="text-lg font-extrabold text-white">Университет (Гантели)</h3>
+                        <span class="text-[10px] font-black text-red-500 uppercase tracking-widest">День 1 • Универ</span>
+                        <h3 class="text-lg font-extrabold text-white">Гантели + Тренажеры</h3>
                     </div>
                 </div>
                 <ul class="space-y-2 text-sm text-zinc-300 mb-5">
@@ -55,17 +54,16 @@
                     <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> Румынская тяга с гантелями (3х10-12)</li>
                     <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> Махи гантелями в стороны (3х12-15)</li>
                 </ul>
-                <button onclick="completeActivity('🏋️ Тренировка: Универ', 'workout')" class="w-full bg-red-600 hover:bg-red-500 active:scale-95 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-red-600/30 uppercase tracking-wider text-xs">
+                <button onclick="completeWorkout('Университет')" class="w-full bg-red-600 hover:bg-red-500 active:scale-95 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-red-600/30 uppercase tracking-wider text-xs">
                     Завершить тренировку 🔥
                 </button>
             </div>
 
-            <!-- День 2: Дома -->
-            <div class="bg-zinc-900/80 border border-zinc-800/80 hover:border-red-600/50 rounded-2xl p-5 shadow-xl backdrop-blur-md">
+            <div class="bg-zinc-900/80 border border-zinc-800 hover:border-red-600/50 rounded-2xl p-5 shadow-xl">
                 <div class="flex justify-between items-start mb-3">
                     <div>
                         <span class="text-[10px] font-black text-red-500 uppercase tracking-widest">День 2 • Дом</span>
-                        <h3 class="text-lg font-extrabold text-white">Дома (Турник + Вес)</h3>
+                        <h3 class="text-lg font-extrabold text-white">Турник + Собственный вес</h3>
                     </div>
                 </div>
                 <ul class="space-y-2 text-sm text-zinc-300 mb-5">
@@ -75,64 +73,58 @@
                     <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> Планка (3х45-60 сек)</li>
                     <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> Скручивания на пресс (3х15-20)</li>
                 </ul>
-                <button onclick="completeActivity('🏠 Тренировка: Дом', 'workout')" class="w-full bg-red-600 hover:bg-red-500 active:scale-95 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-red-600/30 uppercase tracking-wider text-xs">
+                <button onclick="completeWorkout('Дома')" class="w-full bg-red-600 hover:bg-red-500 active:scale-95 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-red-600/30 uppercase tracking-wider text-xs">
                     Завершить тренировку 🔥
                 </button>
             </div>
         </div>
 
-        <!-- ВКЛАДКА 2: ЗАДАЧИ -->
+        <!-- ВКЛАДКА 2: ЗАДАЧИ СО СВАЙПАМИ -->
         <div id="content-tasks" class="hidden space-y-4">
-            <!-- Форма добавления задачи -->
             <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-4 shadow-xl">
-                <h2 class="text-sm font-bold text-zinc-300 mb-3 uppercase tracking-wider">Новая задача</h2>
+                <h2 class="text-xs font-bold text-zinc-400 mb-3 uppercase tracking-wider">Новая задача</h2>
                 <div class="flex gap-2">
-                    <input type="text" id="taskInput" placeholder="Сделать проект, купить продукты..." class="flex-1 bg-black border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-red-600 transition">
+                    <input type="text" id="taskInput" placeholder="Написать код, почитать книгу..." class="flex-1 bg-black border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-red-600 transition">
                     <button onclick="addTask()" class="bg-red-600 hover:bg-red-500 active:scale-95 text-white px-5 rounded-xl font-bold text-sm transition">＋</button>
                 </div>
+                <p class="text-[10px] text-zinc-500 mt-2">👉 Свайп вправо — выполнить | 👈 Свайп влево — удалить</p>
             </div>
 
-            <!-- Список задач -->
             <div id="tasks-list" class="space-y-2.5">
-                <!-- Сюда падают задачи -->
+                <!-- Задачи рендерятся динамически -->
             </div>
         </div>
 
-        <!-- ВКЛАДКА 3: СТАТИСТИКА И ДИАГРАММА -->
+        <!-- ВКЛАДКА 3: СТАТИСТИКА И ДИАГРАММЫ -->
         <div id="content-stats" class="hidden space-y-4">
-            <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl text-center">
-                <h2 class="text-sm font-bold text-zinc-300 mb-4 uppercase tracking-wider">Продуктивность</h2>
-                
-                <!-- Контейнер для диаграммы Chart.js -->
-                <div class="relative w-full h-64 flex justify-center items-center">
-                    <canvas id="productivityChart"></canvas>
+            <!-- Дневная диаграмма -->
+            <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl">
+                <h2 class="text-xs font-bold text-zinc-400 mb-4 uppercase tracking-wider text-center">Активность по дням</h2>
+                <div class="relative w-full h-56">
+                    <canvas id="dailyChart"></canvas>
                 </div>
             </div>
 
-            <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-4 flex justify-around text-center">
-                <div>
-                    <p class="text-xs text-zinc-400 uppercase tracking-wider font-bold">Тренировок</p>
-                    <p id="stat-workouts" class="text-2xl font-black text-red-500 mt-1">0</p>
-                </div>
-                <div class="border-r border-zinc-800"></div>
-                <div>
-                    <p class="text-xs text-zinc-400 uppercase tracking-wider font-bold">Задач выполнено</p>
-                    <p id="stat-tasks" class="text-2xl font-black text-white mt-1">0</p>
+            <!-- Общая диаграмма -->
+            <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl">
+                <h2 class="text-xs font-bold text-zinc-400 mb-4 uppercase tracking-wider text-center">Общий баланс задач и тренировок</h2>
+                <div class="relative w-full h-48 flex justify-center items-center">
+                    <canvas id="overallChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Логика приложения -->
+    <!-- Логика и анимации свайпов -->
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        let myChart = null;
+        let dailyChartInstance = null;
+        let overallChartInstance = null;
 
         function switchTab(tab) {
-            const tabs = ['workouts', 'tasks', 'stats'];
-            tabs.forEach(t => {
+            ['workouts', 'tasks', 'stats'].forEach(t => {
                 const btn = document.getElementById(`tab-${t}`);
                 const content = document.getElementById(`content-${t}`);
                 if (t === tab) {
@@ -143,32 +135,33 @@
                     content.classList.add('hidden');
                 }
             });
-
             if (tab === 'stats') {
-                updateStats();
+                renderCharts();
             }
         }
 
-        // --- УПРАВЛЕНИЕ ТРЕНИРОВКАМИ ---
-        function completeActivity(name, type) {
-            let stats = JSON.parse(localStorage.getItem('elite_stats') || '{"workouts": 0, "tasks": 0}');
-            if (type === 'workout') stats.workouts += 1;
-            localStorage.setItem('elite_stats', JSON.stringify(stats));
+        function getTodayDate() {
+            return new Date().toISOString().split('T')[0];
+        }
 
-            if (tg && tg.HapticFeedback) {
-                tg.HapticFeedback.notificationOccurred('success');
-            }
-            alert(`🔥 Отлично! "${name}" зафиксирована в системе.`);
+        // --- ТРЕНИРОВКИ ---
+        function completeWorkout(type) {
+            let history = JSON.parse(localStorage.getItem('bp_history') || '[]');
+            history.push({ type: 'workout', name: type, date: getTodayDate() });
+            localStorage.setItem('bp_history', JSON.stringify(history));
+
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            alert(`🔥 Тренировка "${type}" успешно записана!`);
             switchTab('stats');
         }
 
-        // --- УПРАВЛЕНИЕ ЗАДАЧАМИ ---
+        // --- ЗАДАЧИ СО СВАЙПАМИ ---
         function getTasks() {
-            return JSON.parse(localStorage.getItem('elite_tasks') || '[]');
+            return JSON.parse(localStorage.getItem('bp_tasks') || '[]');
         }
 
         function saveTasks(tasks) {
-            localStorage.setItem('elite_tasks', JSON.stringify(tasks));
+            localStorage.setItem('bp_tasks', JSON.stringify(tasks));
             renderTasks();
         }
 
@@ -178,22 +171,15 @@
             if (!text) return;
 
             let tasks = getTasks();
-            tasks.unshift({ id: Date.now(), text, completed: false });
+            tasks.unshift({ id: Date.now(), text, completed: false, date: getTodayDate() });
             input.value = '';
             saveTasks(tasks);
         }
 
-        function toggleTask(id) {
+        function toggleTaskStatus(id) {
             let tasks = getTasks();
             tasks = tasks.map(t => {
-                if (t.id === id) {
-                    t.completed = !t.completed;
-                    if (t.completed) {
-                        let stats = JSON.parse(localStorage.getItem('elite_stats') || '{"workouts": 0, "tasks": 0}');
-                        stats.tasks += 1;
-                        localStorage.setItem('elite_stats', JSON.stringify(stats));
-                    }
-                }
+                if (t.id === id) t.completed = !t.completed;
                 return t;
             });
             saveTasks(tasks);
@@ -210,42 +196,93 @@
             const tasks = getTasks();
 
             if (tasks.length === 0) {
-                listEl.innerHTML = `<div class="text-center py-12 text-zinc-600 text-xs uppercase tracking-widest">Список задач пуст</div>`;
+                listEl.innerHTML = `<div class="text-center py-12 text-zinc-600 text-xs uppercase tracking-widest">Нет активных задач</div>`;
                 return;
             }
 
             listEl.innerHTML = tasks.map(t => `
-                <div class="bg-zinc-900/80 border ${t.completed ? 'border-zinc-800/40 opacity-60' : 'border-zinc-800'} rounded-xl p-3.5 flex justify-between items-center gap-3">
-                    <div class="flex items-center gap-3 flex-1 cursor-pointer" onclick="toggleTask(${t.id})">
-                        <div class="w-5 h-5 rounded-lg border ${t.completed ? 'bg-red-600 border-red-600 flex items-center justify-center text-white text-xs' : 'border-zinc-700'} transition">
+                <div id="task-${t.id}" 
+                     class="task-card bg-zinc-900/90 border ${t.completed ? 'border-green-600/40 bg-zinc-950/50' : 'border-zinc-800'} rounded-xl p-4 flex justify-between items-center relative overflow-hidden select-none"
+                     ontouchstart="handleTouchStart(event, ${t.id})"
+                     ontouchmove="handleTouchMove(event, ${t.id})"
+                     ontouchend="handleTouchEnd(event, ${t.id})">
+                    
+                    <div class="flex items-center gap-3 flex-1 pointer-events-none">
+                        <div class="w-5 h-5 rounded-lg border ${t.completed ? 'bg-green-600 border-green-600 text-white flex items-center justify-center text-xs' : 'border-zinc-700'}">
                             ${t.completed ? '✓' : ''}
                         </div>
                         <span class="text-sm font-medium ${t.completed ? 'line-through text-zinc-500' : 'text-zinc-200'}">${t.text}</span>
                     </div>
-                    <button onclick="deleteTask(${t.id})" class="text-zinc-600 hover:text-red-500 text-xs px-2 py-1">✕</button>
+                    <span class="text-[10px] text-zinc-500 uppercase tracking-widest">${t.completed ? 'Выполнено' В ожидании : ''}</span>
                 </div>
             `).join('');
         }
 
-        // --- СТАТИСТИКА И ДИАГРАММА ---
-        function updateStats() {
-            const stats = JSON.parse(localStorage.getItem('elite_stats') || '{"workouts": 0, "tasks": 0}');
-            document.getElementById('stat-workouts').innerText = stats.workouts;
-            document.getElementById('stat-tasks').innerText = stats.tasks;
+        // Логика свайпов для тасков
+        let touchStartX = 0;
+        let currentX = 0;
+        let activeCardId = null;
 
-            const ctx = document.getElementById('productivityChart').getContext('2d');
+        function handleTouchStart(e, id) {
+            touchStartX = e.touches[0].clientX;
+            activeCardId = id;
+        }
+
+        function handleTouchMove(e, id) {
+            if (activeCardId !== id) return;
+            currentX = e.touches[0].clientX;
+            let diff = currentX - touchStartX;
             
-            if (myChart) {
-                myChart.destroy();
+            const card = document.getElementById(`task-${id}`);
+            if (diff > 20) {
+                card.style.transform = `translateX(${Math.min(diff, 100)}px)`;
+                card.style.borderColor = '#16a34a'; // зеленеет при свайпе вправо
+            } else if (diff < -20) {
+                card.style.transform = `translateX(${Math.max(diff, -100)}px)`;
+                card.style.borderColor = '#dc2626'; // краснеет при свайпе влево
             }
+        }
 
-            myChart = new Chart(ctx, {
+        function handleTouchEnd(e, id) {
+            if (activeCardId !== id) return;
+            let diff = currentX - touchStartX;
+            const card = document.getElementById(`task-${id}`);
+            card.style.transform = 'translateX(0)';
+            card.style.borderColor = '#27272a';
+
+            if (diff > 70) {
+                // Свайп вправо -> Выполнить
+                toggleTaskStatus(id);
+                if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+            } else if (diff < -70) {
+                // Свайп влево -> Удалить
+                deleteTask(id);
+                if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
+            }
+            activeCardId = null;
+        }
+
+        // --- СТАТИСТИКА И ДИАГРАММЫ ---
+        function renderCharts() {
+            const tasks = getTasks();
+            const history = JSON.parse(localStorage.getItem('bp_history') || '[]');
+
+            // Подсчет общих данных
+            const completedTasksCount = tasks.filter(t => t.completed).length;
+            const pendingTasksCount = tasks.filter(t => !t.completed).length;
+            const workoutsCount = history.filter(h => h.type === 'workout').length;
+
+            // 1. Общая круговая диаграмма
+            const overallCtx = document.getElementById('overallChart').getContext('2d');
+            if (overallChartInstance) overallChartInstance.destroy();
+
+            overallChartInstance = new Chart(overallCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Тренировки', 'Задачи'],
+                    labels: ['Выполнено', 'В ожидании', 'Тренировки'],
                     datasets: [{
-                        data: [stats.workouts, stats.tasks],
-                        backgroundColor: ['#dc2626', '#3f3f46'],
+                        data: [completedTasksCount, pendingTasksCount, workoutsCount],
+                        backgroundColor: ['#16a34a', '#3f3f46', '#dc2626'],
                         borderColor: '#000000',
                         borderWidth: 2
                     }]
@@ -254,19 +291,54 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: '#a1a1aa',
-                                font: { size: 11, family: 'sans-serif', weight: 'bold' }
-                            }
-                        }
+                        legend: { position: 'bottom', labels: { color: '#a1a1aa', font: { size: 10, weight: 'bold' } } }
+                    }
+                }
+            });
+
+            // 2. Дневная диаграмма (по последним 5 дням)
+            const days = [];
+            const completedData = [];
+            const pendingData = [];
+
+            for (let i = 4; i >= 0; i--) {
+                let d = new Date();
+                d.setDate(d.getDate() - i);
+                let dateStr = d.toISOString().split('T')[0];
+                let label = d.toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric' });
+                days.push(label);
+
+                let dayTasks = tasks.filter(t => t.date === dateStr);
+                completedData.push(dayTasks.filter(t => t.completed).length);
+                pendingData.push(dayTasks.filter(t => !t.completed).length);
+            }
+
+            const dailyCtx = document.getElementById('dailyChart').getContext('2d');
+            if (dailyChartInstance) dailyChartInstance.destroy();
+
+            dailyChartInstance = new Chart(dailyCtx, {
+                type: 'bar',
+                data: {
+                    labels: days,
+                    datasets: [
+                        { label: 'Выполнено', data: completedData, backgroundColor: '#16a34a', borderRadius: 4 },
+                        { label: 'Не выполнено', data: pendingData, backgroundColor: '#dc2626', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, ticks: { color: '#71717a', font: { size: 10 } }, grid: { display: false } },
+                        y: { stacked: true, ticks: { color: '#71717a', font: { size: 10 }, stepSize: 1 }, grid: { color: '#27272a' } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#a1a1aa', font: { size: 10, weight: 'bold' } } }
                     }
                 }
             });
         }
 
-        // Инициализация при старте
         renderTasks();
     </script>
 </body>
