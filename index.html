@@ -13,20 +13,20 @@
     <style>
         * { word-break: break-word; overflow-wrap: break-word; }
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #8b5cf6; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #c084fc; border-radius: 4px; }
         
-        /* Ультра-глубокое матовое стекло */
+        /* Сочное матовое стекло с яркими неоновыми контурами */
         .glass-panel {
-            background: rgba(12, 12, 18, 0.8);
+            background: rgba(18, 16, 30, 0.85);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(192, 132, 252, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.15);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .glass-panel:hover {
-            border-color: rgba(139, 92, 246, 0.4);
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+            border-color: rgba(192, 132, 252, 0.5);
+            box-shadow: 0 25px 60px rgba(139, 92, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.25);
         }
 
         .tab-container {
@@ -65,30 +65,33 @@
             pointer-events: none;
         }
 
-        /* Глубокий многослойный фон */
+        /* Глубокий, насыщенный фон с кибер-сеткой и неоновыми переливами */
         body {
-            background-color: #030305;
+            background-color: #05050a;
             background-image: 
-                radial-gradient(circle at 50% -10%, rgba(91, 33, 182, 0.35) 0%, rgba(15, 15, 23, 0.7) 45%, #000000 100%),
-                radial-gradient(circle at 10% 90%, rgba(76, 29, 149, 0.2) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 40%);
+                radial-gradient(circle at 50% -15%, rgba(147, 51, 234, 0.45) 0%, rgba(20, 15, 35, 0.6) 40%, transparent 70%),
+                radial-gradient(circle at 10% 90%, rgba(219, 39, 119, 0.25) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.25) 0%, transparent 50%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 24px 24px, 24px 24px;
             overflow-x: hidden;
         }
     </style>
 </head>
-<body class="text-zinc-100 font-sans min-h-screen p-4 pb-28 selection:bg-violet-600 selection:text-white">
+<body class="text-zinc-100 font-sans min-h-screen p-4 pb-28 selection:bg-purple-600 selection:text-white">
 
-    <!-- СТАРТОВЫЙ ЭКРАН С УВЕЛИЧЕННЫМ КРУЖКОМ -->
+    <!-- СТАРТОВЫЙ ЭКРАН (КИБЕР-ЯДРО) -->
     <div id="lock-screen" class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center p-6 text-center select-none cursor-pointer">
-        <div id="core-btn" class="relative w-40 h-40 flex items-center justify-center mb-8 rounded-full bg-violet-950/30 border border-violet-500/40 shadow-[0_0_60px_rgba(139,92,246,0.35)] overflow-hidden transition-transform duration-300">
-            <!-- Заполнение при зажатии -->
-            <div id="core-fill" class="absolute inset-0 rounded-full bg-gradient-to-tr from-violet-700 to-indigo-600 scale-0 origin-center transition-transform duration-75"></div>
-            <span class="relative z-10 text-4xl filter drop-shadow-[0_0_15px_rgba(139,92,246,0.9)]">⚡</span>
+        <div id="core-btn" class="relative w-40 h-40 flex items-center justify-center mb-8 rounded-full bg-violet-950/55 border-2 border-violet-400/60 shadow-[0_0_70px_rgba(168,85,247,0.5)] overflow-hidden transition-transform duration-300">
+            <!-- Заполнение при зажатии сочным градиентом -->
+            <div id="core-fill" class="absolute inset-0 rounded-full bg-gradient-to-tr from-violet-600 via-purple-600 to-fuchsia-600 scale-0 origin-center transition-transform duration-75"></div>
+            <span class="relative z-10 text-4xl filter drop-shadow-[0_0_20px_rgba(255,255,255,0.9)]">⚡</span>
         </div>
-        <h1 class="text-3xl font-black tracking-widest uppercase text-white drop-shadow-[0_0_25px_rgba(139,92,246,0.8)] mb-2">
-            BACK <span class="text-violet-500">PRIME</span>
+        <h1 class="text-3xl font-black tracking-widest uppercase text-white drop-shadow-[0_0_25px_rgba(168,85,247,0.9)] mb-2">
+            BACK <span class="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">PRIME</span>
         </h1>
-        <p class="text-xs text-zinc-400 uppercase tracking-[0.25em] font-bold">
+        <p class="text-xs text-zinc-300 uppercase tracking-[0.25em] font-bold">
             Зажми экран, чтобы войти
         </p>
     </div>
@@ -97,30 +100,32 @@
         <!-- Шапка -->
         <header class="flex justify-between items-center mb-4 mt-2">
             <div>
-                <h1 class="text-2xl font-black tracking-widest uppercase text-white drop-shadow-md">BACK <span class="text-violet-400">PRIME</span></h1>
-                <p id="header-real-date" class="text-[10px] text-violet-400 uppercase tracking-widest font-bold mt-0.5">Загрузка...</p>
+                <h1 class="text-2xl font-black tracking-widest uppercase text-white drop-shadow-md">
+                    BACK <span class="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">PRIME</span>
+                </h1>
+                <p id="header-real-date" class="text-[10px] text-violet-300 uppercase tracking-widest font-bold mt-0.5">Загрузка...</p>
             </div>
             <div class="flex items-center gap-1.5">
-                <div class="glass-panel text-violet-300 px-2.5 py-1.5 rounded-full text-[10px] font-extrabold uppercase shadow-lg flex items-center gap-1">
+                <div class="glass-panel text-fuchsia-300 px-2.5 py-1.5 rounded-full text-[10px] font-extrabold uppercase shadow-lg flex items-center gap-1 border-fuchsia-500/30">
                     🔥 <span id="streak-count">1</span> день
                 </div>
-                <div class="glass-panel text-emerald-400 px-3 py-1.5 rounded-full text-[11px] font-black tracking-widest uppercase shadow-lg">
-                    v15.0
+                <div class="glass-panel text-emerald-400 px-3 py-1.5 rounded-full text-[11px] font-black tracking-widest uppercase shadow-lg border-emerald-500/30">
+                    v16.0
                 </div>
             </div>
         </header>
 
         <!-- ЦИТАТНИК -->
-        <div class="glass-panel rounded-2xl p-3.5 mb-5 text-center relative overflow-hidden">
-            <div class="absolute -right-10 -bottom-10 w-24 h-24 bg-violet-600/10 rounded-full blur-2xl"></div>
-            <p id="motivational-quote" class="text-[11px] font-medium text-zinc-300 italic tracking-wide">
+        <div class="glass-panel rounded-2xl p-3.5 mb-5 text-center relative overflow-hidden border-violet-500/30">
+            <div class="absolute -right-10 -bottom-10 w-24 h-24 bg-fuchsia-600/20 rounded-full blur-2xl"></div>
+            <p id="motivational-quote" class="text-[11px] font-medium text-zinc-200 italic tracking-wide">
                 Мотивация загружается...
             </p>
         </div>
 
         <!-- Навигация -->
-        <div class="grid grid-cols-3 gap-1.5 glass-panel p-1.5 rounded-2xl mb-6 relative z-10">
-            <button onclick="switchMainTab('planner')" id="m-tab-planner" class="py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-600/30 uppercase tracking-wider transition-all duration-300">План дня</button>
+        <div class="grid grid-cols-3 gap-1.5 glass-panel p-1.5 rounded-2xl mb-6 relative z-10 border-violet-500/30">
+            <button onclick="switchMainTab('planner')" id="m-tab-planner" class="py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 text-white shadow-lg shadow-purple-600/40 uppercase tracking-wider transition-all duration-300">План дня</button>
             <button onclick="switchMainTab('workouts')" id="m-tab-workouts" class="py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider transition-all duration-300">База</button>
             <button onclick="switchMainTab('stats')" id="m-tab-stats" class="py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider transition-all duration-300">Статы</button>
         </div>
@@ -146,15 +151,15 @@
                 <div class="glass-panel rounded-2xl p-4 space-y-3">
                     <div class="flex justify-between items-center cursor-pointer select-none" onclick="toggleWorkoutExpand()">
                         <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-xl bg-violet-600/20 border border-violet-500/30 flex items-center justify-center text-violet-400 text-sm shadow-inner">🏋️</div>
+                            <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center text-white text-sm shadow-md">🏋️</div>
                             <h2 id="workout-header-title" class="text-xs font-bold text-violet-300 uppercase tracking-wider">Тренировка</h2>
                         </div>
-                        <div id="workout-arrow" class="w-7 h-7 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center text-zinc-400 text-xs transition-transform duration-300">
+                        <div id="workout-arrow" class="w-7 h-7 rounded-xl bg-black/50 border border-white/10 flex items-center justify-center text-zinc-300 text-xs transition-transform duration-300">
                             ▼
                         </div>
                     </div>
                     
-                    <div id="day-workout-container" class="hidden text-sm text-zinc-300 pt-3 border-t border-white/5 space-y-2">
+                    <div id="day-workout-container" class="hidden text-sm text-zinc-300 pt-3 border-t border-white/10 space-y-2">
                         <!-- План тренировки -->
                     </div>
                 </div>
@@ -163,7 +168,7 @@
                 <div class="glass-panel rounded-2xl p-4 space-y-3">
                     <div class="flex justify-between items-center">
                         <h2 class="text-xs font-bold text-zinc-300 uppercase tracking-wider">Задачи на день</h2>
-                        <button onclick="openTaskModal()" class="bg-violet-600 hover:bg-violet-500 text-white px-3.5 py-1.5 rounded-xl font-bold text-xs shadow-md shadow-violet-600/30 transition-all duration-300 active:scale-95">
+                        <button onclick="openTaskModal()" class="bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white px-3.5 py-1.5 rounded-xl font-bold text-xs shadow-md shadow-fuchsia-600/30 transition-all duration-300 active:scale-95">
                             ＋ Добавить задачу
                         </button>
                     </div>
@@ -178,7 +183,7 @@
             <div id="main-content-workouts" class="tab-content space-y-4">
                 <div class="flex justify-between items-center mb-1">
                     <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">База программ</h2>
-                    <button onclick="openAddWorkoutModal()" class="text-xs text-violet-400 hover:text-violet-300 font-bold uppercase tracking-wider transition-colors duration-300">＋ Создать</button>
+                    <button onclick="openAddWorkoutModal()" class="text-xs text-fuchsia-400 hover:text-fuchsia-300 font-bold uppercase tracking-wider transition-colors duration-300">＋ Создать</button>
                 </div>
                 
                 <div id="all-workouts-list" class="space-y-3">
@@ -186,12 +191,12 @@
                 </div>
 
                 <!-- Модалка создания программы -->
-                <div id="add-workout-modal" class="hidden glass-panel rounded-2xl p-5 space-y-3 border-violet-500/40">
+                <div id="add-workout-modal" class="hidden glass-panel rounded-2xl p-5 space-y-3 border-fuchsia-500/40">
                     <h3 class="text-sm font-bold text-white uppercase tracking-wider">Новая программа</h3>
-                    <input type="text" id="newWorkoutName" placeholder="Название..." class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500 transition">
-                    <textarea id="newWorkoutExercises" placeholder="Упражнения (каждое с новой строки):&#10;Жим лежа 3х10&#10;Сведение рук 3х12" rows="4" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500 transition"></textarea>
+                    <input type="text" id="newWorkoutName" placeholder="Название..." class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-fuchsia-500 transition">
+                    <textarea id="newWorkoutExercises" placeholder="Упражнения (каждое с новой строки):&#10;Жим лежа 3х10&#10;Сведение рук 3х12" rows="4" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-fuchsia-500 transition"></textarea>
                     <div class="flex gap-2 pt-1">
-                        <button onclick="saveNewWorkout()" class="flex-1 bg-violet-600 hover:bg-violet-500 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider transition">Сохранить</button>
+                        <button onclick="saveNewWorkout()" class="flex-1 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider transition">Сохранить</button>
                         <button onclick="closeAddWorkoutModal()" class="px-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider transition">Отмена</button>
                     </div>
                 </div>
@@ -223,12 +228,12 @@
     </div>
 
     <!-- МОДАЛЬНОЕ ОКНО ДОБАВЛЕНИЯ ЗАДАЧИ -->
-    <div id="task-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="glass-panel rounded-2xl p-5 w-full max-w-sm space-y-4 border-violet-500/40 animate-in fade-in zoom-in duration-200">
+    <div id="task-modal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-panel rounded-2xl p-5 w-full max-w-sm space-y-4 border-fuchsia-500/50 animate-in fade-in zoom-in duration-200">
             <h3 class="text-sm font-bold text-white uppercase tracking-wider">Новая задача на день</h3>
-            <input type="text" id="modalTaskInput" placeholder="Введите текст задачи..." class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-violet-500 transition">
+            <input type="text" id="modalTaskInput" placeholder="Введите текст задачи..." class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-fuchsia-500 transition">
             <div class="flex gap-2 pt-1">
-                <button onclick="saveModalTask()" class="flex-1 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-violet-600/30 transition">Добавить</button>
+                <button onclick="saveModalTask()" class="flex-1 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-fuchsia-600/30 transition">Добавить</button>
                 <button onclick="closeTaskModal()" class="px-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider transition">Отмена</button>
             </div>
         </div>
@@ -239,7 +244,6 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Расчет стрик-дня (серии)
         function updateStreak() {
             let history = JSON.parse(localStorage.getItem('bp_history') || '[]');
             document.getElementById('streak-count').innerText = Math.max(1, history.length);
@@ -344,7 +348,7 @@
                 const btn = document.getElementById(`m-tab-${t}`);
                 const content = document.getElementById(`main-content-${t}`);
                 if (t === tab) {
-                    btn.className = "py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-600/30 uppercase tracking-wider transition-all duration-300";
+                    btn.className = "py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 text-white shadow-lg shadow-fuchsia-600/40 uppercase tracking-wider transition-all duration-300";
                     content.classList.add('active');
                 } else {
                     btn.className = "py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider transition-all duration-300";
@@ -369,7 +373,7 @@
             dayKeysOrder.forEach(d => {
                 const btn = document.getElementById(`day-btn-${d}`);
                 if (d === day) {
-                    btn.className = "flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-violet-600 text-white transition-all duration-300 shadow-lg shadow-violet-600/30";
+                    btn.className = "flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white transition-all duration-300 shadow-lg shadow-fuchsia-600/30";
                 } else {
                     btn.className = "flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition-all duration-300";
                 }
@@ -411,13 +415,13 @@
                     wContainer.innerHTML = `
                         <div class="space-y-1.5 pt-1">
                             ${w.exercises.map((ex, idx) => `
-                                <div onclick="toggleDayExercise('${selectedDay}',${idx})" class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex items-center gap-2.5 cursor-pointer hover:border-violet-500/30 transition">
-                                    <div class="w-4 h-4 rounded border ${checkedMap[idx] ? 'bg-emerald-600 border-emerald-600 text-white text-[10px] flex items-center justify-center' : 'border-white/20'}">${checkedMap[idx] ? '✓' : ''}</div>
+                                <div onclick="toggleDayExercise('${selectedDay}',${idx})" class="bg-black/40 border border-white/10 rounded-xl p-2.5 flex items-center gap-2.5 cursor-pointer hover:border-fuchsia-500/40 transition">
+                                    <div class="w-4 h-4 rounded border ${checkedMap[idx] ? 'bg-emerald-600 border-emerald-600 text-white text-[10px] flex items-center justify-center' : 'border-white/25'}">${checkedMap[idx] ? '✓' : ''}</div>
                                     <span class="text-xs ${checkedMap[idx] ? 'line-through text-zinc-500' : 'text-zinc-200'}">${ex}</span>
                                 </div>
                             `).join('')}
                         </div>
-                        <button onclick="finishDayWorkout('${w.title}')" class="mt-3 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider transition shadow-lg shadow-emerald-600/20">✅ Отметить выполненной</button>
+                        <button onclick="finishDayWorkout('${w.title}')" class="mt-3 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider transition shadow-lg shadow-emerald-600/30">✅ Отметить выполненной</button>
                     `;
                 }
             }
@@ -492,9 +496,9 @@
                 return;
             }
             listEl.innerHTML = tasks.map(t => `
-                <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex justify-between items-center gap-2 ${t.completed ? 'opacity-50' : ''} transition">
+                <div class="bg-black/40 border border-white/10 rounded-xl p-2.5 flex justify-between items-center gap-2 ${t.completed ? 'opacity-50' : ''} transition">
                     <div class="flex items-center gap-2 flex-1 cursor-pointer" onclick="toggleDayTask(${t.id})">
-                        <div class="w-4 h-4 rounded border ${t.completed ? 'bg-emerald-600 border-emerald-600 text-white text-[10px] flex items-center justify-center' : 'border-white/20'}">${t.completed ? '✓' : ''}</div>
+                        <div class="w-4 h-4 rounded border ${t.completed ? 'bg-emerald-600 border-emerald-600 text-white text-[10px] flex items-center justify-center' : 'border-white/25'}">${t.completed ? '✓' : ''}</div>
                         <span class="text-xs ${t.completed ? 'line-through text-zinc-500' : 'text-zinc-200'}">${t.text}</span>
                     </div>
                     <button onclick="deleteDayTask(${t.id})" class="text-zinc-500 hover:text-red-400 text-xs px-1 transition-colors">✕</button>
@@ -514,13 +518,13 @@
                     <div class="glass-panel rounded-2xl p-4 space-y-3">
                         <div class="flex justify-between items-start">
                             <div>
-                                <span class="text-[10px] text-violet-400 uppercase font-bold">${w.tag || 'Своя'}</span>
+                                <span class="text-[10px] text-fuchsia-400 uppercase font-bold">${w.tag || 'Своя'}</span>
                                 <h3 class="text-sm font-bold text-white">${w.title}</h3>
                             </div>
                             ${!w.isDefault ? `<button onclick="deleteWorkout('${w.id}')" class="text-zinc-500 hover:text-red-400 text-xs p-1 transition-colors">Удалить</button>` : ''}
                         </div>
                         
-                        <div class="text-xs text-zinc-400 bg-black/30 p-2.5 rounded-xl space-y-1 border border-white/5">
+                        <div class="text-xs text-zinc-400 bg-black/40 p-2.5 rounded-xl space-y-1 border border-white/10">
                             <p class="font-bold text-zinc-300">План упражнений:</p>
                             <ul class="list-disc list-inside text-[11px] space-y-0.5 text-zinc-400">
                                 ${w.exercises.map(ex => `<li>${ex}</li>`).join('')}
@@ -533,7 +537,7 @@
                                 ${dayKeysOrder.map(d => {
                                     let isAssigned = assignedDays.includes(d);
                                     return `
-                                        <button onclick="toggleWorkoutDay('${w.id}', '${d}')" class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 ${isAssigned ? 'bg-violet-600 text-white shadow-md shadow-violet-600/30' : 'bg-zinc-900 text-zinc-500 hover:text-zinc-300'}">
+                                        <button onclick="toggleWorkoutDay('${w.id}', '${d}')" class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 ${isAssigned ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-md shadow-fuchsia-600/30' : 'bg-zinc-900 text-zinc-500 hover:text-zinc-300'}">
                                             ${dayNamesShort[d]}
                                         </button>
                                     `;
@@ -601,7 +605,7 @@
                 return;
             }
             listEl.innerHTML = history.slice(-5).reverse().map(item => `
-                <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex justify-between items-center text-xs">
+                <div class="bg-black/40 border border-white/10 rounded-xl p-2.5 flex justify-between items-center text-xs">
                     <div>
                         <p class="font-bold text-zinc-200">${item.name}</p>
                         <p class="text-[10px] text-zinc-500">${item.date}</p>
@@ -647,7 +651,7 @@
                     labels: ['Тренировки', 'Вып. задачи', 'Невып. задачи'],
                     datasets: [{ 
                         data: [workoutsCount, completedByDay.reduce((a,b)=>a+b,0), uncompletedByDay.reduce((a,b)=>a+b,0)], 
-                        backgroundColor: ['#8b5cf6', '#10b981', '#ef4444'], 
+                        backgroundColor: ['#c084fc', '#10b981', '#ef4444'], 
                         borderWidth: 0 
                     }]
                 },
