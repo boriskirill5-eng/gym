@@ -11,36 +11,53 @@
     <!-- Chart.js для диаграмм -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        * { transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease; }
+        * { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 4px; }
-        .task-card { will-change: transform; touch-action: pan-y; }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(220, 38, 38, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(220, 38, 38, 0.5); }
+        }
+        .active-workout-glow { animation: pulse-glow 2s infinite; }
     </style>
 </head>
-<body class="bg-black text-zinc-100 font-sans min-h-screen p-4 pb-24 selection:bg-red-600 selection:text-white overflow-x-hidden">
+<body class="bg-black text-zinc-100 font-sans min-h-screen p-4 pb-24 selection:bg-red-600 selection:text-white">
 
     <div class="max-w-md mx-auto">
         <!-- Шапка -->
         <header class="flex justify-between items-center mb-6 mt-2">
             <div>
                 <h1 class="text-2xl font-black tracking-widest uppercase text-white">BACK <span class="text-red-600">PRIME</span></h1>
-                <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">System Control v3.0</p>
+                <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Elite System v4.0</p>
             </div>
-            <div class="bg-red-950/40 text-red-500 px-3 py-1 rounded-full text-xs font-black border border-red-600/30 tracking-widest uppercase shadow-lg shadow-red-600/20">
-                ACTIVE
+            <div id="system-status" class="bg-red-950/40 text-red-500 px-3 py-1 rounded-full text-xs font-black border border-red-600/30 tracking-widest uppercase shadow-lg shadow-red-600/25">
+                ONLINE
             </div>
         </header>
 
         <!-- Навигация -->
-        <div class="grid grid-cols-3 gap-1 bg-zinc-900/90 p-1.5 rounded-2xl mb-6 border border-zinc-800">
+        <div class="grid grid-cols-3 gap-1.5 bg-zinc-900/90 p-1.5 rounded-2xl mb-6 border border-zinc-800 backdrop-blur-md">
             <button onclick="switchTab('workouts')" id="tab-workouts" class="py-2.5 text-xs font-bold rounded-xl bg-red-600 text-white shadow-lg shadow-red-600/30 uppercase tracking-wider">План</button>
             <button onclick="switchTab('tasks')" id="tab-tasks" class="py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider">Задачи</button>
             <button onclick="switchTab('stats')" id="tab-stats" class="py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider">Статы</button>
         </div>
 
-        <!-- ВКЛАДКА 1: ТРЕНИРОВКИ -->
+        <!-- ВКЛАДКА 1: ТРЕНИРОВКИ (С интерактивным таймером) -->
         <div id="content-workouts" class="space-y-4">
-            <div class="bg-zinc-900/80 border border-zinc-800 hover:border-red-600/50 rounded-2xl p-5 shadow-xl">
+            <!-- Блок активной тренировки (появляется при запуске) -->
+            <div id="active-workout-panel" class="hidden bg-zinc-900 border-2 border-red-600 rounded-2xl p-5 shadow-2xl active-workout-glow">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-xs font-black text-red-500 uppercase tracking-widest animate-pulse">● Идет тренировка</span>
+                    <span id="workout-timer" class="text-xl font-mono font-black text-white">00:00</span>
+                </div>
+                <h3 id="active-workout-title" class="text-lg font-extrabold text-white mb-4">Название тренировки</h3>
+                <button onclick="finishActiveWorkout()" class="w-full bg-red-600 hover:bg-red-500 active:scale-95 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-red-600/40 uppercase tracking-wider text-xs">
+                    ⏹ Завершить тренировку
+                </button>
+            </div>
+
+            <!-- День 1: Универ -->
+            <div id="card-gym" class="bg-zinc-900/80 border border-zinc-800 hover:border-red-600/50 rounded-2xl p-5 shadow-xl">
                 <div class="flex justify-between items-start mb-3">
                     <div>
                         <span class="text-[10px] font-black text-red-500 uppercase tracking-widest">День 1 • Универ</span>
@@ -54,12 +71,13 @@
                     <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> Румынская тяга с гантелями (3х10-12)</li>
                     <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> Махи гантелями в стороны (3х12-15)</li>
                 </ul>
-                <button onclick="completeWorkout('Университет')" class="w-full bg-red-600 hover:bg-red-500 active:scale-95 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-red-600/30 uppercase tracking-wider text-xs">
-                    Завершить тренировку 🔥
+                <button onclick="startWorkout('Университет')" class="btn-start-w w-full bg-zinc-800 hover:bg-red-600 text-zinc-200 hover:text-white font-bold py-3 rounded-xl transition uppercase tracking-wider text-xs border border-zinc-700 hover:border-red-600">
+                    ▶ Начать тренировку
                 </button>
             </div>
 
-            <div class="bg-zinc-900/80 border border-zinc-800 hover:border-red-600/50 rounded-2xl p-5 shadow-xl">
+            <!-- День 2: Дома -->
+            <div id="card-home" class="bg-zinc-900/80 border border-zinc-800 hover:border-red-600/50 rounded-2xl p-5 shadow-xl">
                 <div class="flex justify-between items-start mb-3">
                     <div>
                         <span class="text-[10px] font-black text-red-500 uppercase tracking-widest">День 2 • Дом</span>
@@ -73,21 +91,20 @@
                     <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> Планка (3х45-60 сек)</li>
                     <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> Скручивания на пресс (3х15-20)</li>
                 </ul>
-                <button onclick="completeWorkout('Дома')" class="w-full bg-red-600 hover:bg-red-500 active:scale-95 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-red-600/30 uppercase tracking-wider text-xs">
-                    Завершить тренировку 🔥
+                <button onclick="startWorkout('Дома')" class="btn-start-w w-full bg-zinc-800 hover:bg-red-600 text-zinc-200 hover:text-white font-bold py-3 rounded-xl transition uppercase tracking-wider text-xs border border-zinc-700 hover:border-red-600">
+                    ▶ Начать тренировку
                 </button>
             </div>
         </div>
 
-        <!-- ВКЛАДКА 2: ЗАДАЧИ СО СВАЙПАМИ -->
+        <!-- ВКЛАДКА 2: ЗАДАЧИ (С кнопками галочки и крестика) -->
         <div id="content-tasks" class="hidden space-y-4">
             <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-4 shadow-xl">
                 <h2 class="text-xs font-bold text-zinc-400 mb-3 uppercase tracking-wider">Новая задача</h2>
                 <div class="flex gap-2">
                     <input type="text" id="taskInput" placeholder="Написать код, почитать книгу..." class="flex-1 bg-black border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-red-600 transition">
-                    <button onclick="addTask()" class="bg-red-600 hover:bg-red-500 active:scale-95 text-white px-5 rounded-xl font-bold text-sm transition">＋</button>
+                    <button onclick="addTask()" class="bg-red-600 hover:bg-red-500 active:scale-95 text-white px-5 rounded-xl font-bold text-sm transition shadow-lg shadow-red-600/30">＋</button>
                 </div>
-                <p class="text-[10px] text-zinc-500 mt-2">👉 Свайп вправо — выполнить | 👈 Свайп влево — удалить</p>
             </div>
 
             <div id="tasks-list" class="space-y-2.5">
@@ -97,7 +114,6 @@
 
         <!-- ВКЛАДКА 3: СТАТИСТИКА И ДИАГРАММЫ -->
         <div id="content-stats" class="hidden space-y-4">
-            <!-- Дневная диаграмма -->
             <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl">
                 <h2 class="text-xs font-bold text-zinc-400 mb-4 uppercase tracking-wider text-center">Активность по дням</h2>
                 <div class="relative w-full h-56">
@@ -105,7 +121,6 @@
                 </div>
             </div>
 
-            <!-- Общая диаграмма -->
             <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl">
                 <h2 class="text-xs font-bold text-zinc-400 mb-4 uppercase tracking-wider text-center">Общий баланс задач и тренировок</h2>
                 <div class="relative w-full h-48 flex justify-center items-center">
@@ -115,13 +130,15 @@
         </div>
     </div>
 
-    <!-- Логика и анимации свайпов -->
+    <!-- Логика приложения -->
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
         let dailyChartInstance = null;
         let overallChartInstance = null;
+        let activeWorkout = null;
+        let timerInterval = null;
 
         function switchTab(tab) {
             ['workouts', 'tasks', 'stats'].forEach(t => {
@@ -144,18 +161,48 @@
             return new Date().toISOString().split('T')[0];
         }
 
-        // --- ТРЕНИРОВКИ ---
-        function completeWorkout(type) {
-            let history = JSON.parse(localStorage.getItem('bp_history') || '[]');
-            history.push({ type: 'workout', name: type, date: getTodayDate() });
-            localStorage.setItem('bp_history', JSON.stringify(history));
+        // --- ИНТЕРАКТИВНЫЕ ТРЕНИРОВКИ С ТАЙМЕРОМ ---
+        function startWorkout(name) {
+            activeWorkout = { name, startTime: Date.now() };
+            
+            document.getElementById('active-workout-title').innerText = `Тренировка: ${name}`;
+            document.getElementById('active-workout-panel').classList.remove('hidden');
+            
+            // Прячем карточки выбора
+            document.getElementById('card-gym').classList.add('opacity-40', 'pointer-events-none');
+            document.getElementById('card-home').classList.add('opacity-40', 'pointer-events-none');
 
             if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            alert(`🔥 Тренировка "${type}" успешно записана!`);
+
+            // Запуск таймера
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                let seconds = Math.floor((Date.now() - activeWorkout.startTime) / 1000);
+                let mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+                let secs = (seconds % 60).toString().padStart(2, '0');
+                document.getElementById('workout-timer').innerText = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function finishActiveWorkout() {
+            if (!activeWorkout) return;
+            
+            clearInterval(timerInterval);
+            let history = JSON.parse(localStorage.getItem('bp_history') || '[]');
+            history.push({ type: 'workout', name: activeWorkout.name, date: getTodayDate() });
+            localStorage.setItem('bp_history', JSON.stringify(history));
+
+            document.getElementById('active-workout-panel').classList.add('hidden');
+            document.getElementById('card-gym').classList.remove('opacity-40', 'pointer-events-none');
+            document.getElementById('card-home').classList.remove('opacity-40', 'pointer-events-none');
+
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            
+            activeWorkout = null;
             switchTab('stats');
         }
 
-        // --- ЗАДАЧИ СО СВАЙПАМИ ---
+        // --- УПРАВЛЕНИЕ ЗАДАЧАМИ (Кнопки Галочка / Крестик) ---
         function getTasks() {
             return JSON.parse(localStorage.getItem('bp_tasks') || '[]');
         }
@@ -183,12 +230,14 @@
                 return t;
             });
             saveTasks(tasks);
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         }
 
         function deleteTask(id) {
             let tasks = getTasks();
             tasks = tasks.filter(t => t.id !== id);
             saveTasks(tasks);
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
         }
 
         function renderTasks() {
@@ -196,68 +245,27 @@
             const tasks = getTasks();
 
             if (tasks.length === 0) {
-                listEl.innerHTML = `<div class="text-center py-12 text-zinc-600 text-xs uppercase tracking-widest">Нет активных задач</div>`;
+                listEl.innerHTML = `<div class="text-center py-12 text-zinc-600 text-xs uppercase tracking-widest">Список задач пуст</div>`;
                 return;
             }
 
             listEl.innerHTML = tasks.map(t => `
-                <div id="task-${t.id}" 
-                     class="task-card bg-zinc-900/90 border ${t.completed ? 'border-green-600/40 bg-zinc-950/50' : 'border-zinc-800'} rounded-xl p-4 flex justify-between items-center relative overflow-hidden select-none"
-                     ontouchstart="handleTouchStart(event, ${t.id})"
-                     ontouchmove="handleTouchMove(event, ${t.id})"
-                     ontouchend="handleTouchEnd(event, ${t.id})">
-                    
-                    <div class="flex items-center gap-3 flex-1 pointer-events-none">
-                        <div class="w-5 h-5 rounded-lg border ${t.completed ? 'bg-green-600 border-green-600 text-white flex items-center justify-center text-xs' : 'border-zinc-700'}">
-                            ${t.completed ? '✓' : ''}
-                        </div>
+                <div class="bg-zinc-900/90 border ${t.completed ? 'border-green-600/40 bg-zinc-950/40' : 'border-zinc-800'} rounded-2xl p-4 flex justify-between items-center gap-3 shadow-md">
+                    <div class="flex items-center gap-3 flex-1">
                         <span class="text-sm font-medium ${t.completed ? 'line-through text-zinc-500' : 'text-zinc-200'}">${t.text}</span>
                     </div>
-                    <span class="text-[10px] text-zinc-500 uppercase tracking-widest">${t.completed ? 'Выполнено' : 'В ожидании'}</span>
+                    <div class="flex items-center gap-2">
+                        <!-- Кнопка галочки (выполнить) -->
+                        <button onclick="toggleTaskStatus(${t.id})" class="w-9 h-9 rounded-xl ${t.completed ? 'bg-green-600 text-white' : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'} flex items-center justify-center font-bold transition active:scale-95 shadow-md">
+                            ✓
+                        </button>
+                        <!-- Кнопка крестика (удалить) -->
+                        <button onclick="deleteTask(${t.id})" class="w-9 h-9 rounded-xl bg-zinc-800 text-zinc-400 hover:bg-red-600 hover:text-white flex items-center justify-center font-bold transition active:scale-95 shadow-md">
+                            ✕
+                        </button>
+                    </div>
                 </div>
             `).join('');
-        }
-
-        // Логика свайпов для тасков
-        let touchStartX = 0;
-        let currentX = 0;
-        let activeCardId = null;
-
-        function handleTouchStart(e, id) {
-            touchStartX = e.touches[0].clientX;
-            activeCardId = id;
-        }
-
-        function handleTouchMove(e, id) {
-            if (activeCardId !== id) return;
-            currentX = e.touches[0].clientX;
-            let diff = currentX - touchStartX;
-            
-            const card = document.getElementById(`task-${id}`);
-            if (diff > 20) {
-                card.style.transform = `translateX(${Math.min(diff, 100)}px)`;
-                card.style.borderColor = '#16a34a';
-            } else if (diff < -20) {
-                card.style.transform = `translateX(${Math.max(diff, -100)}px)`;
-                card.style.borderColor = '#dc2626';
-            }
-        }
-
-        function handleTouchEnd(e, id) {
-            if (activeCardId !== id) return;
-            let diff = currentX - touchStartX;
-            const card = document.getElementById(`task-${id}`);
-            card.style.transform = 'translateX(0)';
-            card.style.borderColor = '#27272a';
-
-            if (diff > 70) {
-                toggleTaskStatus(id);
-                if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-            } else if (diff < -70) {
-                deleteTask(id);
-                if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
-            }
-            activeCardId = null;
         }
 
         // --- СТАТИСТИКА И ДИАГРАММЫ ---
@@ -316,8 +324,8 @@
                 data: {
                     labels: days,
                     datasets: [
-                        { label: 'Выполнено', data: completedData, backgroundColor: '#16a34a', borderRadius: 4 },
-                        { label: 'Не выполнено', data: pendingData, backgroundColor: '#dc2626', borderRadius: 4 }
+                        { label: 'Выполнено', data: completedData, backgroundColor: '#16a34a', borderRadius: 6 },
+                        { label: 'Не выполнено', data: pendingData, backgroundColor: '#dc2626', borderRadius: 6 }
                     ]
                 },
                 options: {
