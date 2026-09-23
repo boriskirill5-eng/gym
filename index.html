@@ -15,21 +15,49 @@
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #8b5cf6; border-radius: 4px; }
         
+        /* Элитный Cyber Luxe Glass */
         .glass-panel {
-            background: rgba(15, 15, 23, 0.85);
+            background: rgba(13, 13, 20, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.5);
-            transition: border-color 0.2s ease;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .glass-panel:hover {
-            border-color: rgba(139, 92, 246, 0.3);
+            border-color: rgba(139, 92, 246, 0.35);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        /* Плавные переходы между вкладками без рывков */
+        .tab-container {
+            position: relative;
+            min-height: 520px;
+        }
+        .tab-content {
+            opacity: 0;
+            transform: translateY(12px) scale(0.99);
+            pointer-events: none;
+            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+        }
+        .tab-content.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+            position: relative;
+        }
+
+        /* Плавное вращение стрелки */
+        .rotate-arrow {
+            transform: rotate(180deg);
+        }
 
         #splash-screen {
-            animation: splashFade 0.4s ease 1s forwards;
+            animation: splashFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) 1s forwards;
         }
         @keyframes splashFade {
             0% { opacity: 1; visibility: visible; }
@@ -37,7 +65,7 @@
         }
 
         body {
-            background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #09090b 60%, #000000 100%);
+            background: radial-gradient(circle at 50% -20%, #2e1065 0%, #09090b 55%, #000000 100%);
             overflow-x: hidden;
         }
     </style>
@@ -47,131 +75,134 @@
     <!-- СПЛЭШ-ЭКРАН -->
     <div id="splash-screen" class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center p-6 text-center">
         <div class="relative">
-            <div class="absolute -inset-4 bg-violet-600/30 rounded-full blur-2xl animate-pulse"></div>
-            <h1 class="relative text-4xl font-black tracking-widest uppercase text-white">
+            <div class="absolute -inset-6 bg-violet-600/30 rounded-full blur-3xl animate-pulse"></div>
+            <h1 class="relative text-4xl font-black tracking-widest uppercase text-white drop-shadow-[0_0_25px_rgba(139,92,246,0.8)]">
                 BACK <span class="text-violet-500">PRIME</span>
             </h1>
         </div>
-        <p id="splash-date" class="text-xs text-zinc-400 uppercase tracking-[0.2em] mt-3 font-bold">Загрузка системы...</p>
+        <p id="splash-date" class="text-xs text-zinc-400 uppercase tracking-[0.3em] mt-4 font-bold">Инициализация ядра...</p>
     </div>
 
     <div class="max-w-md mx-auto relative">
         <!-- Шапка -->
-        <header class="flex justify-between items-center mb-3 mt-2">
+        <header class="flex justify-between items-center mb-4 mt-2">
             <div>
-                <h1 class="text-2xl font-black tracking-widest uppercase text-white">BACK <span class="text-violet-400">PRIME</span></h1>
-                <p id="header-real-date" class="text-[10px] text-violet-400 uppercase tracking-widest font-bold">Загрузка...</p>
+                <h1 class="text-2xl font-black tracking-widest uppercase text-white drop-shadow-md">BACK <span class="text-violet-400">PRIME</span></h1>
+                <p id="header-real-date" class="text-[10px] text-violet-400 uppercase tracking-widest font-bold mt-0.5">Загрузка...</p>
             </div>
-            <div class="glass-panel text-emerald-400 px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase">
-                PRO v11.0
+            <div class="glass-panel text-emerald-400 px-3 py-1.5 rounded-full text-[11px] font-black tracking-widest uppercase shadow-lg">
+                LUXE v12.0
             </div>
         </header>
 
         <!-- ЦИТАТНИК -->
-        <div class="glass-panel rounded-2xl p-3 mb-5 text-center relative overflow-hidden">
-            <p id="motivational-quote" class="text-[11px] font-medium text-zinc-300 italic">
+        <div class="glass-panel rounded-2xl p-3.5 mb-5 text-center relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-24 h-24 bg-violet-600/10 rounded-full blur-2xl"></div>
+            <p id="motivational-quote" class="text-[11px] font-medium text-zinc-300 italic tracking-wide">
                 Мотивация загружается...
             </p>
         </div>
 
         <!-- Навигация -->
         <div class="grid grid-cols-3 gap-1.5 glass-panel p-1.5 rounded-2xl mb-6 relative z-10">
-            <button onclick="switchMainTab('planner')" id="m-tab-planner" class="py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg uppercase tracking-wider">План дня</button>
-            <button onclick="switchMainTab('workouts')" id="m-tab-workouts" class="py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider">База</button>
-            <button onclick="switchMainTab('stats')" id="m-tab-stats" class="py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider">Статы</button>
+            <button onclick="switchMainTab('planner')" id="m-tab-planner" class="py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-600/30 uppercase tracking-wider transition-all duration-300">План дня</button>
+            <button onclick="switchMainTab('workouts')" id="m-tab-workouts" class="py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider transition-all duration-300">База</button>
+            <button onclick="switchMainTab('stats')" id="m-tab-stats" class="py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider transition-all duration-300">Статы</button>
         </div>
 
-        <!-- РАЗДЕЛ 1: ПЛАН ДНЯ -->
-        <div id="main-content-planner" class="tab-content active space-y-4">
+        <!-- КОНТЕЙНЕР ВКЛАДОК -->
+        <div class="tab-container">
             
-            <!-- Дни недели -->
-            <div class="flex gap-1 overflow-x-auto pb-1 no-scrollbar">
-                <button onclick="selectDay('mon')" id="day-btn-mon" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition">Пн</button>
-                <button onclick="selectDay('tue')" id="day-btn-tue" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition">Вт</button>
-                <button onclick="selectDay('wed')" id="day-btn-wed" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition">Ср</button>
-                <button onclick="selectDay('thu')" id="day-btn-thu" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition">Чт</button>
-                <button onclick="selectDay('fri')" id="day-btn-fri" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition">Пт</button>
-                <button onclick="selectDay('sat')" id="day-btn-sat" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition">Сб</button>
-                <button onclick="selectDay('sun')" id="day-btn-sun" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition">Вс</button>
-            </div>
+            <!-- РАЗДЕЛ 1: ПЛАН ДНЯ -->
+            <div id="main-content-planner" class="tab-content active space-y-4">
+                
+                <!-- Дни недели -->
+                <div class="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+                    <button onclick="selectDay('mon')" id="day-btn-mon" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition-all duration-300">Пн</button>
+                    <button onclick="selectDay('tue')" id="day-btn-tue" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition-all duration-300">Вт</button>
+                    <button onclick="selectDay('wed')" id="day-btn-wed" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition-all duration-300">Ср</button>
+                    <button onclick="selectDay('thu')" id="day-btn-thu" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition-all duration-300">Чт</button>
+                    <button onclick="selectDay('fri')" id="day-btn-fri" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition-all duration-300">Пт</button>
+                    <button onclick="selectDay('sat')" id="day-btn-sat" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition-all duration-300">Сб</button>
+                    <button onclick="selectDay('sun')" id="day-btn-sun" class="flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition-all duration-300">Вс</button>
+                </div>
 
-            <div id="today-banner" class="hidden bg-violet-600/20 border border-violet-500/40 rounded-xl px-4 py-2 flex justify-between items-center text-xs text-violet-300 font-bold">
-                <span>🔥 Сегодня по расписанию</span>
-                <span id="today-label">День</span>
-            </div>
-
-            <!-- Блок тренировки (сворачиваемый) -->
-            <div class="glass-panel rounded-2xl p-4 space-y-3">
-                <div class="flex justify-between items-center cursor-pointer" onclick="toggleWorkoutExpand()">
-                    <div class="flex items-center gap-2">
-                        <span class="text-violet-400 text-sm">🏋️</span>
-                        <h2 id="workout-header-title" class="text-xs font-bold text-violet-400 uppercase tracking-wider">Тренировка</h2>
+                <!-- Блок тренировки (сворачиваемый, только стрелочка) -->
+                <div class="glass-panel rounded-2xl p-4 space-y-3">
+                    <div class="flex justify-between items-center cursor-pointer select-none" onclick="toggleWorkoutExpand()">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-xl bg-violet-600/20 border border-violet-500/30 flex items-center justify-center text-violet-400 text-sm shadow-inner">🏋️</div>
+                            <h2 id="workout-header-title" class="text-xs font-bold text-violet-300 uppercase tracking-wider">Тренировка</h2>
+                        </div>
+                        <div id="workout-arrow" class="w-7 h-7 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center text-zinc-400 text-xs transition-transform duration-300">
+                            ▼
+                        </div>
                     </div>
-                    <span id="workout-expand-icon" class="text-xs text-zinc-400">▼ Развернуть</span>
+                    
+                    <div id="day-workout-container" class="hidden text-sm text-zinc-300 pt-3 border-t border-white/5 space-y-2">
+                        <!-- План тренировки -->
+                    </div>
+                </div>
+
+                <!-- Задачи дня -->
+                <div class="glass-panel rounded-2xl p-4 space-y-3">
+                    <h2 class="text-xs font-bold text-zinc-300 uppercase tracking-wider">Задачи на день</h2>
+                    <div class="flex gap-2">
+                        <input type="text" id="dayTaskInput" placeholder="Новая задача..." class="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500 transition-all duration-300">
+                        <button onclick="addDayTask()" class="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white px-5 rounded-xl font-bold text-sm shadow-lg shadow-violet-600/30 transition-all duration-300 active:scale-95">＋</button>
+                    </div>
+                    <div id="day-tasks-list" class="space-y-2 pt-1">
+                        <!-- Задачи -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- РАЗДЕЛ 2: БАЗА ТРЕНИРОВОК -->
+            <div id="main-content-workouts" class="tab-content space-y-4">
+                <div class="flex justify-between items-center mb-1">
+                    <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">База программ</h2>
+                    <button onclick="openAddWorkoutModal()" class="text-xs text-violet-400 hover:text-violet-300 font-bold uppercase tracking-wider transition-colors duration-300">＋ Создать</button>
                 </div>
                 
-                <div id="day-workout-container" class="hidden text-sm text-zinc-300 pt-2 border-t border-white/5 space-y-2">
-                    <!-- План тренировки -->
+                <div id="all-workouts-list" class="space-y-3">
+                    <!-- Рендер всех тренировок с днями недели -->
+                </div>
+
+                <!-- Модалка создания -->
+                <div id="add-workout-modal" class="hidden glass-panel rounded-2xl p-5 space-y-3 border-violet-500/40">
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">Новая программа</h3>
+                    <input type="text" id="newWorkoutName" placeholder="Название..." class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500 transition">
+                    <textarea id="newWorkoutExercises" placeholder="Упражнения (каждое с новой строки):&#10;Жим лежа 3х10&#10;Сведение рук 3х12" rows="4" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500 transition"></textarea>
+                    <div class="flex gap-2 pt-1">
+                        <button onclick="saveNewWorkout()" class="flex-1 bg-violet-600 hover:bg-violet-500 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider transition">Сохранить</button>
+                        <button onclick="closeAddWorkoutModal()" class="px-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider transition">Отмена</button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Задачи дня -->
-            <div class="glass-panel rounded-2xl p-4 space-y-3">
-                <h2 class="text-xs font-bold text-zinc-300 uppercase tracking-wider">Задачи на день</h2>
-                <div class="flex gap-2">
-                    <input type="text" id="dayTaskInput" placeholder="Новая задача..." class="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
-                    <button onclick="addDayTask()" class="bg-violet-600 hover:bg-violet-500 text-white px-4 rounded-xl font-bold text-sm transition">＋</button>
+            <!-- РАЗДЕЛ 3: СТАТИСТИКА -->
+            <div id="main-content-stats" class="tab-content space-y-4">
+                <div class="glass-panel rounded-2xl p-5 shadow-xl">
+                    <h2 class="text-xs font-bold text-zinc-300 mb-4 uppercase tracking-wider text-center">Активность за неделю (Столбцы)</h2>
+                    <div class="relative w-full h-60">
+                        <canvas id="dailyBarChart"></canvas>
+                    </div>
                 </div>
-                <div id="day-tasks-list" class="space-y-2 pt-1">
-                    <!-- Задачи -->
+
+                <div class="glass-panel rounded-2xl p-5 shadow-xl">
+                    <h2 class="text-xs font-bold text-zinc-300 mb-4 uppercase tracking-wider text-center">Общий баланс</h2>
+                    <div class="relative w-full h-48 flex justify-center items-center">
+                        <canvas id="overallChart"></canvas>
+                    </div>
                 </div>
-            </div>
 
-        </div>
-
-        <!-- РАЗДЕЛ 2: БАЗА ТРЕНИРОВОК (С НАЗНАЧЕНИЕМ НА ДНИ) -->
-        <div id="main-content-workouts" class="tab-content space-y-4">
-            <div class="flex justify-between items-center mb-1">
-                <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">База программ</h2>
-                <button onclick="openAddWorkoutModal()" class="text-xs text-violet-400 hover:text-violet-300 font-bold uppercase tracking-wider">＋ Создать</button>
-            </div>
-            
-            <div id="all-workouts-list" class="space-y-3">
-                <!-- Рендер всех тренировок с днями недели -->
-            </div>
-
-            <!-- Модалка создания -->
-            <div id="add-workout-modal" class="hidden glass-panel rounded-2xl p-5 space-y-3 border-violet-500/40">
-                <h3 class="text-sm font-bold text-white uppercase tracking-wider">Новая программа</h3>
-                <input type="text" id="newWorkoutName" placeholder="Название..." class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500">
-                <textarea id="newWorkoutExercises" placeholder="Упражнения (каждое с новой строки):&#10;Жим лежа 3х10&#10;Сведение рук 3х12" rows="4" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500"></textarea>
-                <div class="flex gap-2 pt-1">
-                    <button onclick="saveNewWorkout()" class="flex-1 bg-violet-600 hover:bg-violet-500 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider transition">Сохранить</button>
-                    <button onclick="closeAddWorkoutModal()" class="px-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider transition">Отмена</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- РАЗДЕЛ 3: СТАТИСТИКА -->
-        <div id="main-content-stats" class="tab-content space-y-4">
-            <div class="glass-panel rounded-2xl p-5 shadow-xl">
-                <h2 class="text-xs font-bold text-zinc-300 mb-4 uppercase tracking-wider text-center">Активность за неделю (Столбцы)</h2>
-                <div class="relative w-full h-60">
-                    <canvas id="dailyBarChart"></canvas>
+                <div class="glass-panel rounded-2xl p-4 space-y-3">
+                    <h2 class="text-xs font-bold text-zinc-300 uppercase tracking-wider">История (Правка)</h2>
+                    <div id="history-manage-list" class="space-y-2 max-h-40 overflow-y-auto"></div>
                 </div>
             </div>
 
-            <div class="glass-panel rounded-2xl p-5 shadow-xl">
-                <h2 class="text-xs font-bold text-zinc-300 mb-4 uppercase tracking-wider text-center">Общий баланс</h2>
-                <div class="relative w-full h-48 flex justify-center items-center">
-                    <canvas id="overallChart"></canvas>
-                </div>
-            </div>
-
-            <div class="glass-panel rounded-2xl p-4 space-y-3">
-                <h2 class="text-xs font-bold text-zinc-300 uppercase tracking-wider">История (Правка)</h2>
-                <div id="history-manage-list" class="space-y-2 max-h-40 overflow-y-auto"></div>
-            </div>
         </div>
     </div>
 
@@ -199,7 +230,6 @@
         let selectedDay = currentRealDayKey;
         let isWorkoutExpanded = false;
 
-        // Авто-привязка универа на Пн и Чт по умолчанию
         function initDefaultSchedule() {
             let schedule = JSON.parse(localStorage.getItem('bp_schedule') || '{}');
             if (!schedule['mon']) schedule['mon'] = { workoutId: 'gym', checkedExercises: {} };
@@ -235,10 +265,10 @@
                 const btn = document.getElementById(`m-tab-${t}`);
                 const content = document.getElementById(`main-content-${t}`);
                 if (t === tab) {
-                    btn.className = "py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg uppercase tracking-wider";
+                    btn.className = "py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-600/30 uppercase tracking-wider transition-all duration-300";
                     content.classList.add('active');
                 } else {
-                    btn.className = "py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider";
+                    btn.className = "py-2.5 text-xs font-bold rounded-xl text-zinc-400 hover:text-white uppercase tracking-wider transition-all duration-300";
                     content.classList.remove('active');
                 }
             });
@@ -247,43 +277,41 @@
                 renderCharts();
                 renderHistoryManager();
             }
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
         }
 
         // --- ПЛАН ДНЯ ---
         function selectDay(day) {
             selectedDay = day;
             isWorkoutExpanded = false;
+            document.getElementById('day-workout-container').classList.add('hidden');
+            document.getElementById('workout-arrow').classList.remove('rotate-arrow');
+
             dayKeysOrder.forEach(d => {
                 const btn = document.getElementById(`day-btn-${d}`);
                 if (d === day) {
-                    btn.className = "flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-violet-600 text-white transition shadow-lg shadow-violet-600/30";
+                    btn.className = "flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-violet-600 text-white transition-all duration-300 shadow-lg shadow-violet-600/30";
                 } else {
-                    btn.className = "flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition";
+                    btn.className = "flex-1 min-w-[42px] py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 transition-all duration-300";
                 }
             });
 
-            const banner = document.getElementById('today-banner');
-            if (day === currentRealDayKey) {
-                banner.classList.remove('hidden');
-                document.getElementById('today-label').innerText = `Сегодня`;
-            } else {
-                banner.classList.add('hidden');
-            }
-
             renderDayPlanner();
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
         }
 
         function toggleWorkoutExpand() {
             isWorkoutExpanded = !isWorkoutExpanded;
             const container = document.getElementById('day-workout-container');
-            const icon = document.getElementById('workout-expand-icon');
+            const arrow = document.getElementById('workout-arrow');
             if (isWorkoutExpanded) {
                 container.classList.remove('hidden');
-                icon.innerText = "▲ Свернуть";
+                arrow.classList.add('rotate-arrow');
             } else {
                 container.classList.add('hidden');
-                icon.innerText = "▼ Развернуть";
+                arrow.classList.remove('rotate-arrow');
             }
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
         }
 
         function renderDayPlanner() {
@@ -299,18 +327,18 @@
             } else {
                 let w = workouts.find(item => item.id == assignedId);
                 if (w) {
-                    headerTitle.innerText = `Тренировка: ${w.title}`;
+                    headerTitle.innerText = `${w.title}`;
                     let checkedMap = schedule[selectedDay]?.checkedExercises || {};
                     wContainer.innerHTML = `
                         <div class="space-y-1.5 pt-1">
                             ${w.exercises.map((ex, idx) => `
-                                <div onclick="toggleDayExercise('${selectedDay}',${idx})" class="bg-black/30 border border-white/5 rounded-lg p-2.5 flex items-center gap-2.5 cursor-pointer">
+                                <div onclick="toggleDayExercise('${selectedDay}',${idx})" class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex items-center gap-2.5 cursor-pointer hover:border-violet-500/30 transition">
                                     <div class="w-4 h-4 rounded border ${checkedMap[idx] ? 'bg-emerald-600 border-emerald-600 text-white text-[10px] flex items-center justify-center' : 'border-white/20'}">${checkedMap[idx] ? '✓' : ''}</div>
                                     <span class="text-xs ${checkedMap[idx] ? 'line-through text-zinc-500' : 'text-zinc-200'}">${ex}</span>
                                 </div>
                             `).join('')}
                         </div>
-                        <button onclick="finishDayWorkout('${w.title}')" class="mt-3 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs uppercase tracking-wider transition">✅ Отметить выполненной</button>
+                        <button onclick="finishDayWorkout('${w.title}')" class="mt-3 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider transition shadow-lg shadow-emerald-600/20">✅ Отметить выполненной</button>
                     `;
                 }
             }
@@ -369,26 +397,24 @@
                 return;
             }
             listEl.innerHTML = tasks.map(t => `
-                <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex justify-between items-center gap-2 ${t.completed ? 'opacity-50' : ''}">
+                <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex justify-between items-center gap-2 ${t.completed ? 'opacity-50' : ''} transition">
                     <div class="flex items-center gap-2 flex-1 cursor-pointer" onclick="toggleDayTask(${t.id})">
                         <div class="w-4 h-4 rounded border ${t.completed ? 'bg-emerald-600 border-emerald-600 text-white text-[10px] flex items-center justify-center' : 'border-white/20'}">${t.completed ? '✓' : ''}</div>
                         <span class="text-xs ${t.completed ? 'line-through text-zinc-500' : 'text-zinc-200'}">${t.text}</span>
                     </div>
-                    <button onclick="deleteDayTask(${t.id})" class="text-zinc-500 hover:text-red-400 text-xs px-1">✕</button>
+                    <button onclick="deleteDayTask(${t.id})" class="text-zinc-500 hover:text-red-400 text-xs px-1 transition-colors">✕</button>
                 </div>
             `).join('');
         }
 
-        // --- БАЗА ТРЕНИРОВОК (С НАЗНАЧЕНИЕМ НА ДНИ) ---
+        // --- БАЗА ТРЕНИРОВОК ---
         function renderAllWorkouts() {
             const container = document.getElementById('all-workouts-list');
             const workouts = getWorkouts();
             let schedule = JSON.parse(localStorage.getItem('bp_schedule') || '{}');
 
             container.innerHTML = workouts.map(w => {
-                // Ищем, в какие дни назначена эта тренировка
                 let assignedDays = dayKeysOrder.filter(d => schedule[d]?.workoutId === w.id);
-
                 return `
                     <div class="glass-panel rounded-2xl p-4 space-y-3">
                         <div class="flex justify-between items-start">
@@ -396,10 +422,10 @@
                                 <span class="text-[10px] text-violet-400 uppercase font-bold">${w.tag || 'Своя'}</span>
                                 <h3 class="text-sm font-bold text-white">${w.title}</h3>
                             </div>
-                            ${!w.isDefault ? `<button onclick="deleteWorkout('${w.id}')" class="text-zinc-500 hover:text-red-400 text-xs p-1">Удалить</button>` : ''}
+                            ${!w.isDefault ? `<button onclick="deleteWorkout('${w.id}')" class="text-zinc-500 hover:text-red-400 text-xs p-1 transition-colors">Удалить</button>` : ''}
                         </div>
                         
-                        <div class="text-xs text-zinc-400 bg-black/30 p-2 rounded-xl space-y-1">
+                        <div class="text-xs text-zinc-400 bg-black/30 p-2.5 rounded-xl space-y-1 border border-white/5">
                             <p class="font-bold text-zinc-300">План упражнений:</p>
                             <ul class="list-disc list-inside text-[11px] space-y-0.5 text-zinc-400">
                                 ${w.exercises.map(ex => `<li>${ex}</li>`).join('')}
@@ -412,7 +438,7 @@
                                 ${dayKeysOrder.map(d => {
                                     let isAssigned = assignedDays.includes(d);
                                     return `
-                                        <button onclick="toggleWorkoutDay('${w.id}', '${d}')" class="flex-1 py-1.5 rounded-lg text-xs font-bold transition ${isAssigned ? 'bg-violet-600 text-white shadow-md' : 'bg-zinc-900 text-zinc-500 hover:text-zinc-300'}">
+                                        <button onclick="toggleWorkoutDay('${w.id}', '${d}')" class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 ${isAssigned ? 'bg-violet-600 text-white shadow-md shadow-violet-600/30' : 'bg-zinc-900 text-zinc-500 hover:text-zinc-300'}">
                                             ${dayNamesShort[d]}
                                         </button>
                                     `;
@@ -429,14 +455,15 @@
             if (!schedule[day]) schedule[day] = {};
             
             if (schedule[day].workoutId === wId) {
-                schedule[day].workoutId = ""; // снимаем
+                schedule[day].workoutId = "";
                 schedule[day].checkedExercises = {};
             } else {
-                schedule[day].workoutId = wId; // назначаем
+                schedule[day].workoutId = wId;
                 schedule[day].checkedExercises = {};
             }
             localStorage.setItem('bp_schedule', JSON.stringify(schedule));
             renderAllWorkouts();
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
         }
 
         function openAddWorkoutModal() { document.getElementById('add-workout-modal').classList.remove('hidden'); }
@@ -462,7 +489,6 @@
             custom = custom.filter(w => w.id !== id);
             localStorage.setItem('bp_custom_workouts', JSON.stringify(custom));
             
-            // Также убираем из расписания
             let schedule = JSON.parse(localStorage.getItem('bp_schedule') || '{}');
             dayKeysOrder.forEach(d => {
                 if (schedule[d]?.workoutId === id) schedule[d].workoutId = "";
@@ -471,7 +497,7 @@
             renderAllWorkouts();
         }
 
-        // --- СТАТИСТИКА (СТОЛБЦЫ И АВТО-ПРОВЕРКА ПРОШЕДШИХ ЗАДАЧ) ---
+        // --- СТАТИСТИКА ---
         function renderHistoryManager() {
             const listEl = document.getElementById('history-manage-list');
             let history = JSON.parse(localStorage.getItem('bp_history') || '[]');
@@ -485,7 +511,7 @@
                         <p class="font-bold text-zinc-200">${item.name}</p>
                         <p class="text-[10px] text-zinc-500">${item.date}</p>
                     </div>
-                    <button onclick="deleteHistoryItem(${item.id})" class="text-zinc-500 hover:text-red-400 p-1 font-bold">✕</button>
+                    <button onclick="deleteHistoryItem(${item.id})" class="text-zinc-500 hover:text-red-400 p-1 font-bold transition-colors">✕</button>
                 </div>
             `).join('');
         }
@@ -496,14 +522,14 @@
             localStorage.setItem('bp_history', JSON.stringify(history));
             renderHistoryManager();
             renderCharts();
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
         }
 
         function renderCharts() {
             let history = JSON.parse(localStorage.getItem('bp_history') || '[]');
             let workoutsCount = history.filter(h => h.type === 'workout').length;
 
-            // Подсчет выполненных и невыполненных задач по дням недели
-            let completedByDay = [0,0,0,0,0,0,0]; // Пн-Вс
+            let completedByDay = [0,0,0,0,0,0,0];
             let uncompletedByDay = [0,0,0,0,0,0,0];
 
             dayKeysOrder.forEach((dKey, index) => {
@@ -532,7 +558,6 @@
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#a1a1aa', font: { size: 10 } } } } }
             });
 
-            // Столбчатая диаграмма активности по дням недели
             const dailyCtx = document.getElementById('dailyBarChart').getContext('2d');
             if (dailyChartInstance) dailyChartInstance.destroy();
             dailyChartInstance = new Chart(dailyCtx, {
@@ -540,8 +565,8 @@
                 data: {
                     labels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
                     datasets: [
-                        { label: 'Выполнено задач', data: completedByDay, backgroundColor: '#10b981', borderRadius: 4 },
-                        { label: 'Не выполнено', data: uncompletedByDay, backgroundColor: '#ef4444', borderRadius: 4 }
+                        { label: 'Выполнено задач', data: completedByDay, backgroundColor: '#10b981', borderRadius: 6 },
+                        { label: 'Не выполнено', data: uncompletedByDay, backgroundColor: '#ef4444', borderRadius: 6 }
                     ]
                 },
                 options: { 
@@ -556,7 +581,7 @@
             });
         }
 
-        // Инициализация при старте
+        // Старт
         selectDay(currentRealDayKey);
     </script>
 </body>
