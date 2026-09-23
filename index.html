@@ -73,11 +73,12 @@
 </head>
 <body class="text-zinc-100 font-sans min-h-screen p-4 pb-28 selection:bg-violet-600 selection:text-white">
 
-    <!-- НОВЫЙ СТАРТОВЫЙ ЭКРАН (LOCK SCREEN) -->
+    <!-- СТАРТОВЫЙ ЭКРАН С ЗАПОЛНЯЮЩИМСЯ КРУЖКОМ -->
     <div id="lock-screen" class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center p-6 text-center select-none cursor-pointer">
-        <div id="core-btn" class="relative w-32 h-32 flex items-center justify-center mb-6 rounded-full bg-violet-950/30 border border-violet-500/40 shadow-[0_0_40px_rgba(139,92,246,0.3)] transition-transform duration-300 active:scale-90">
-            <div class="absolute inset-2 rounded-full border border-violet-400/30 animate-ping opacity-75"></div>
-            <span class="text-3xl filter drop-shadow-[0_0_10px_rgba(139,92,246,0.8)]">⚡</span>
+        <div id="core-btn" class="relative w-32 h-32 flex items-center justify-center mb-6 rounded-full bg-violet-950/30 border border-violet-500/40 shadow-[0_0_40px_rgba(139,92,246,0.3)] overflow-hidden transition-transform duration-300">
+            <!-- Фиолетовая заливка при зажатии -->
+            <div id="core-fill" class="absolute inset-0 rounded-full bg-gradient-to-tr from-violet-700 to-indigo-600 scale-0 origin-center transition-transform duration-75"></div>
+            <span class="relative z-10 text-3xl filter drop-shadow-[0_0_10px_rgba(139,92,246,0.8)]">⚡</span>
         </div>
         <h1 class="text-3xl font-black tracking-widest uppercase text-white drop-shadow-[0_0_20px_rgba(139,92,246,0.8)] mb-2">
             BACK <span class="text-violet-500">PRIME</span>
@@ -95,7 +96,7 @@
                 <p id="header-real-date" class="text-[10px] text-violet-400 uppercase tracking-widest font-bold mt-0.5">Загрузка...</p>
             </div>
             <div class="glass-panel text-emerald-400 px-3 py-1.5 rounded-full text-[11px] font-black tracking-widest uppercase shadow-lg">
-                LUXE v14.0
+                LUXE v14.1
             </div>
         </header>
 
@@ -148,7 +149,7 @@
                     </div>
                 </div>
 
-                <!-- Задачи дня (чистый интерфейс с кнопкой-модалкой) -->
+                <!-- Задачи дня -->
                 <div class="glass-panel rounded-2xl p-4 space-y-3">
                     <div class="flex justify-between items-center">
                         <h2 class="text-xs font-bold text-zinc-300 uppercase tracking-wider">Задачи на день</h2>
@@ -228,24 +229,43 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // --- ПЛАВНЫЙ РАЗБЛОКИРОВЩИК (ЗАЖАТИЕ ЭКРАНА) ---
+        // --- ЛОГИКА ЗАПОЛНЯЮЩЕГОСЯ КРУЖКА ПРИ ЗАЖАТИИ ---
         const lockScreen = document.getElementById('lock-screen');
         const coreBtn = document.getElementById('core-btn');
-        let unlockTimeout = null;
+        const coreFill = document.getElementById('core-fill');
+        let holdStartTime = 0;
+        let holdTimerInterval = null;
+        const requiredHoldTime = 800; // 0.8 секунды зажатия
 
         function startUnlock(e) {
             e.preventDefault();
-            coreBtn.style.transform = 'scale(0.9)';
-            unlockTimeout = setTimeout(() => {
-                if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-                lockScreen.classList.add('unlocking');
-                setTimeout(() => lockScreen.remove(), 600);
-            }, 600); // 0.6 секунды зажатия
+            holdStartTime = Date.now();
+            coreBtn.style.transform = 'scale(0.92)';
+
+            holdTimerInterval = setInterval(() => {
+                let elapsed = Date.now() - holdStartTime;
+                let progress = Math.min(elapsed / requiredHoldTime, 1);
+                
+                // Плавное заполнение кружка фиолетовым цветом
+                coreFill.style.transform = `scale(${progress})`;
+
+                if (progress >= 1) {
+                    clearInterval(holdTimerInterval);
+                    if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+                    lockScreen.classList.add('unlocking');
+                    setTimeout(() => lockScreen.remove(), 600);
+                }
+            }, 16);
+
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
         }
 
-        function cancelUnlock() {
+        function cancelUnlock(e) {
+            if (!holdStartTime) return;
+            clearInterval(holdTimerInterval);
+            holdStartTime = 0;
             coreBtn.style.transform = 'scale(1)';
-            if (unlockTimeout) clearTimeout(unlockTimeout);
+            coreFill.style.transform = 'scale(0)';
         }
 
         lockScreen.addEventListener('mousedown', startUnlock);
