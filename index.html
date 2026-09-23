@@ -213,7 +213,7 @@
                         </div>
                         <span class="text-sm font-medium ${t.completed ? 'line-through text-zinc-500' : 'text-zinc-200'}">${t.text}</span>
                     </div>
-                    <span class="text-[10px] text-zinc-500 uppercase tracking-widest">${t.completed ? 'Выполнено' В ожидании : ''}</span>
+                    <span class="text-[10px] text-zinc-500 uppercase tracking-widest">${t.completed ? 'Выполнено' : 'В ожидании'}</span>
                 </div>
             `).join('');
         }
@@ -236,10 +236,10 @@
             const card = document.getElementById(`task-${id}`);
             if (diff > 20) {
                 card.style.transform = `translateX(${Math.min(diff, 100)}px)`;
-                card.style.borderColor = '#16a34a'; // зеленеет при свайпе вправо
+                card.style.borderColor = '#16a34a';
             } else if (diff < -20) {
                 card.style.transform = `translateX(${Math.max(diff, -100)}px)`;
-                card.style.borderColor = '#dc2626'; // краснеет при свайпе влево
+                card.style.borderColor = '#dc2626';
             }
         }
 
@@ -251,11 +251,9 @@
             card.style.borderColor = '#27272a';
 
             if (diff > 70) {
-                // Свайп вправо -> Выполнить
                 toggleTaskStatus(id);
                 if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
             } else if (diff < -70) {
-                // Свайп влево -> Удалить
                 deleteTask(id);
                 if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
             }
@@ -267,12 +265,10 @@
             const tasks = getTasks();
             const history = JSON.parse(localStorage.getItem('bp_history') || '[]');
 
-            // Подсчет общих данных
             const completedTasksCount = tasks.filter(t => t.completed).length;
             const pendingTasksCount = tasks.filter(t => !t.completed).length;
             const workoutsCount = history.filter(h => h.type === 'workout').length;
 
-            // 1. Общая круговая диаграмма
             const overallCtx = document.getElementById('overallChart').getContext('2d');
             if (overallChartInstance) overallChartInstance.destroy();
 
@@ -296,7 +292,6 @@
                 }
             });
 
-            // 2. Дневная диаграмма (по последним 5 дням)
             const days = [];
             const completedData = [];
             const pendingData = [];
